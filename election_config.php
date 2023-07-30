@@ -30,7 +30,7 @@
                     <th class="text-center" scope="col">Action</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody class="election">
                   <?php
                     $i = 1;
                     $election = $conn->prepare("SELECT * FROM election ORDER BY year ASC");
@@ -47,22 +47,24 @@
                      }else{
                       echo '<td><span class="badge rounded-pill bg-success">Active</span></td>';
                      }
-                    echo '<td class="text-center"><a href="#" class="btn btn-outline-primary btn-sm open-modal" data-bs-toggle="modal" data-bs-target="#viewElection" data-id="'.$row['id'].'">View</a></td>
+                  echo '<td class="text-center"><a href="#" class="btn btn-outline-primary btn-sm open-modal" data-bs-toggle="modal" data-bs-target="#viewElection" data-id="'.$row['id'].'"><i class="bi bi-eye"></i></a></td>
+                    <td class="text-center"><a href="#" class="btn btn-outline-secondary btn-sm open-modal" data-bs-toggle="modal" data-bs-target="#viewElection" data-id="'.$row['id'].'"><i class="bi bi-pencil"></i></a></td>
+                    <td class="text-center"><button class="btn btn-outline-danger btn-sm delete-election" data-id="'.$row['id'].'"><i class="bi bi-trash"></i></a></button></td>
                   </tr>';
                     } ?>
                 </tbody>
               </table><!-- End Election lists Table -->
-              
+
               <!-- Add Election Modal -->
               <div class="modal fade" id="addElection" tabindex="-1">
-                <div class="modal-dialog modal-dialog-scrollable">
-                  <div class="modal-content">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                  <form id="add-election-form"  class="modal-content">
                     <div class="modal-header">
                       <h5 class="modal-title">Add Election</h5>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                      <form id="add-election-form" class="row g-3">
+                      <div class="row g-3">
                         <div class="col-md-12">
                           <label for="title" class="form-label">Title</label>
                           <input type="text" name="title" class="form-control" id="title" data-error-message="Title of election is required">
@@ -96,32 +98,31 @@
                           <textarea name="description" class="form-control" id="description" rows="5" data-error-message="Please enter short description of this election"></textarea>
                           <div class="invalid-feedback"></div>
                         </div>
-                        <div class="text-center">
-                          <button type="submit" name="submit" id="submit" class="btn btn-primary">Add Election</button>
-                          <button type="reset" class="btn btn-secondary">Reset</button>
-                        </div>
-                      </form>
+                      </div>
                     </div>
-                    <div class="modal-footer"></div>
-                  </div>
+                    <div class="modal-footer">
+                      <button type="reset" class="btn btn-secondary">Reset</button>
+                      <button type="submit" name="submit" id="submit" class="btn btn-primary">Add Election</button>
+                    </div>
+                  </form>
                 </div>
               </div><!-- End Add Election Modal Dialog -->
 
-              <!-- view Election Modal -->
+              <!-- The Modal -->
               <div class="modal fade" id="viewElection" tabindex="-1">
-                <div class="modal-dialog modal-dialog-scrollable">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title">View Election</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                      
-                    </div>
-                    <div class="modal-footer"></div>
+                  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <h5 class="modal-title"></h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body" id="viewElectionModalBoddy">
+
+                          </div>
+                      </div>
                   </div>
-                </div>
-              </div><!-- End View Election Modal Dialog -->
+              </div>
+              <!-- End View Election Modal Dialog -->
 
             </div>
           </div>

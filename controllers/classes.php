@@ -176,20 +176,34 @@ class Admin {
 	}
 
 	function show_election() {
-		extract($_POST);
-		$stmt = $mysqli->prepare("SELECT title, year, voters, starttime, endtime, description FROM election WHERE id = ?");
-		$stmt->bind_param("i", $electionId);
-		$stmt->execute();
-		$result = $stmt->get_result();
+		// extract($_POST);
+		// $stmt = $mysqli->prepare("SELECT title, year, voters, starttime, endtime, description FROM election WHERE id = ?");
+		// $stmt->bind_param("i", $electionId);
+		// $stmt->execute();
+		// $result = $stmt->get_result();
 	
-		if ($result->num_rows > 0) {
-			$data = $result->fetch_assoc();
-			echo json_encode($data);
-		} else {
-			echo json_encode(array('error' => 'Item not found'));
-		}
+		// if ($result->num_rows > 0) {
+		// 	$data = $result->fetch_assoc();
+		// 	return $data; // Return the data instead of echoing it
+		// } else {
+		// 	return array('error' => 'Item not found'); // Return an array instead of echoing it
+		// }
 	
-		$stmt->close();
-		$mysqli->close();
-	}
+		// $stmt->close();
+		// $mysqli->close();
+		
+		// SAMPLE DATA
+		$data = array(
+			'title' => 'Sample Election Title',
+			'year' => '2023',
+			'voters' => '5000',
+			'starttime' => '2023-07-29 12:00:00',
+			'endtime' => '2023-07-29 18:00:00',
+			'description' => 'Sample election description...',
+		);
+		header('Content-Type: application/json');
+		echo json_encode($data);
+
+			}
+	
 }

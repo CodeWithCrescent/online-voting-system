@@ -118,6 +118,7 @@ function voteMpFemale(selectedCheckbox) {
         loginForm.classList.add('was-validated');
     }, false);
   </script>
+
   <script>
 $('#add-election-form').submit(function(e){
 		e.preventDefault()
@@ -172,5 +173,70 @@ $('#add-election-form').submit(function(e){
       input.siblings(".invalid-feedback").text(""); // Clear error message
     }
   });
-  
+
+</script>
+
+<script>
+	$('.open-modal').click(function(){
+		viewElection("Election Overview",'view_election.php?id='+$(this).attr('data-id'))
+	})
   </script>
+
+<script>
+  window._conf = function($msg='', $func='', $params = []) {
+     $('#confirm_modal #confirm').attr('onclick', $func + "(" + $params.join(',') + ")");
+     $('#confirm_modal .modal-body').html($msg);
+     $('#confirm_modal').modal('show');
+  }
+</script>
+<script>
+  $('.delete-election').click(function (e) {
+    // e.preventDefault();
+
+    // Get the data-id attribute from the button
+    var dataId = $(this).attr('data-id');
+    
+    // Call the _conf function to display the confirmation modal
+    _conf("Are you sure to delete this election?", "delete_election", [dataId]);
+  });
+</script>
+
+  <script>
+	function delete_election($id){
+		$.ajax({
+			url:'app.php?action=delete_election',
+			method:'POST',
+			data:{id:$id},
+			success:function(resp){
+				if(resp==1){
+					alert_toast("Data successfully deleted",'success')
+					setTimeout(function(){
+						location.reload()
+					},1500)
+
+				}
+			}
+		})
+	}
+</script>
+
+<script>
+  window.viewElection = function($title = '' , $url=''){
+    // start_load()
+    $.ajax({
+        url:$url,
+        error:err=>{
+            console.log()
+            alert("An error occured")
+        },
+        success:function(resp){
+            if(resp){
+                $('#viewElection .modal-title').html($title)
+                $('#viewElection .modal-body').html(resp)
+                $('#viewElection').modal('show')
+                // end_load()
+            }
+        }
+    })
+  }
+</script>

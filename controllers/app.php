@@ -27,14 +27,8 @@ if($action == 'add_election'){
 	if($save)
 		echo $save;
 }
-// if($action == 'show_election'){
-// 	$get = $admin->show_election();
-// 	if($get)
-// 		echo $get;
-// }
-if (isset($_GET['election_id'])) {
-    $electionId = $_GET['election_id'];
-		$get = $admin->show_election();
-		if($get)
-			echo $get;
+
+if ($action == 'show_election') {
+    $data = $admin->show_election();
+    echo json_encode($data); // Echo the JSON data back to the JavaScript file
 }

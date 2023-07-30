@@ -35,44 +35,11 @@ document.addEventListener("DOMContentLoaded", function () {
   $("#endtime").on("dp.change", function (e) {
     $('#starttime').data("DateTimePicker").maxDate(e.date);
   });
-});
-
-$(document).ready(function() {
-  $('[data-toggle="tooltip"]').tooltip();
-});
-
-const openModalButtons = document.querySelectorAll('.open-modal');
-
-openModalButtons.forEach(button => {
-  button.addEventListener('click', function (event) {
-    event.preventDefault();
-    const itemId = button.dataset.id;
-
-    // Send an AJAX request to the server to get the specific data for itemId
-    fetch('app.php?election_id=' + itemId)
-      .then(response => response.json())
-      .then(data => {
-        // Update the modal content with the specific data
-        if (data.error) {
-          console.error(data.error);
-          return;
-        }
-
-        const modalTitle = document.querySelector('#addElection .modal-title');
-        modalTitle.textContent = data.title;
-
-        const modalBody = document.querySelector('#addElection .modal-body');
-        modalBody.innerHTML = `
-          <p>Year: ${data.year}</p>
-          <p>Voters: ${data.voters}</p>
-          <p>Start Time: ${data.starttime}</p>
-          <p>End Time: ${data.endtime}</p>
-          <p>Description: ${data.description}</p>
-        `;
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
+  
+  $(document).ready(function() {
+    $('[data-toggle="tooltip"]').tooltip();
   });
 });
+
+
 
