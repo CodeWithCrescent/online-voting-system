@@ -40,16 +40,14 @@
                       
                   echo '<tr>
                     <th scope="row">'.$i++.'</th>
-                    <td><a href="index.php?page=manage_election&id='.$row['id'].'">'.$row['title'].'</a></td>
+                    <td><a href="index.php?page=candidates0&id='.$row['id'].'">'.$row['title'].'</a></td>
                     <td>'.$row['year'];'</td>';
                     if($row['status'] === 0){
                       echo '<td><span class="badge rounded-pill bg-secondary">Not active</span></td>';
                      }else{
                       echo '<td><span class="badge rounded-pill bg-success">Active</span></td>';
                      }
-                  echo '<td class="text-center"><a href="#" class="btn btn-outline-primary btn-sm open-modal" data-bs-toggle="modal" data-bs-target="#viewElection" data-id="'.$row['id'].'"><i class="bi bi-eye"></i></a></td>
-                    <td class="text-center"><a href="#" class="btn btn-outline-secondary btn-sm open-modal" data-bs-toggle="modal" data-bs-target="#viewElection" data-id="'.$row['id'].'"><i class="bi bi-pencil"></i></a></td>
-                    <td class="text-center"><button class="btn btn-outline-danger btn-sm delete-election" data-id="'.$row['id'].'"><i class="bi bi-trash"></i></a></button></td>
+                  echo '<td class="text-center"><a href="#" class="btn btn-outline-secondary btn-sm open-modal" data-bs-toggle="modal" data-bs-target="#viewElection" data-id="'.$row['id'].'"><i class="bi bi-eye"></i> View</a></td>
                   </tr>';
                     } ?>
                 </tbody>

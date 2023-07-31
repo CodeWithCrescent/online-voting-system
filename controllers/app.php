@@ -30,5 +30,23 @@ if($action == 'add_election'){
 
 if ($action == 'show_election') {
     $data = $admin->show_election();
-    echo json_encode($data); // Echo the JSON data back to the JavaScript file
+    echo json_encode($data);
+}
+
+if($action == 'add_category'){
+	$save = $admin->add_category();
+	if($save)
+		echo $save;
+}
+
+if($action == 'update_category'){
+	$save = $admin->update_category();
+	if($save)
+		echo $save;
+}
+
+if($action == 'delete_category'){
+	$save = $admin->delete_category();
+	if($save)
+		echo $save;
 }

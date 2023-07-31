@@ -204,6 +204,97 @@ class Admin {
 		header('Content-Type: application/json');
 		echo json_encode($data);
 
+	}
+
+	function add_category() {
+		extract($_POST);
+		$added_by = $_SESSION['login_username'];
+
+		if (empty($id)) {
+			try {
+				$save = $this->db->prepare("INSERT INTO categories (name, added_by) VALUES (?, ?)");
+				if (!$save) {
+					throw new Exception("Failed to prepare the query.");
+				}
+	
+				$save->bind_param("ss", $category, $added_by);
+	
+				if (!$save->execute()) {
+					throw new Exception("Failed to execute the query.");
+				}
+	
+				echo json_encode(array('status' => 'success', 'redirect_url' => 'index.php?page=categories'));
+	
+			} catch (Exception $e) {
+				echo json_encode(array('status' => 'error', 'message' => 'Failed to add category! Try again later.'));
 			}
+	
+		} else {
+			// ID Exists
+			echo json_encode(array('status' => 'errors', 'message' => 'Failed to add category! Contact administator for help.')); 
+		}
+	}
+
+	function update_category() {
+		extract($_POST);
+		$updated_by = $_SESSION['login_username'];
+	
+		if (!empty($category_id)) {
+			try {
+				$save = $this->db->prepare("UPDATE categories SET name = ?, updated_by = ? WHERE id = ?");
+				if (!$save) {
+					throw new Exception("Failed to prepare the query.");
+				}
+	
+				$save->bind_param("ssi", $category, $updated_by, $category_id);
+	
+				if (!$save->execute()) {
+					throw new Exception("Failed to execute the query.");
+				}
+	
+				echo json_encode(array('status' => 'success', 'redirect_url' => 'index.php?page=categories'));
+	
+			} catch (Exception $e) {
+				echo json_encode(array('status' => 'error', 'message' => 'Failed to update category! Try again later.'));
+			}
+	
+		} else {
+			// ID does not exist
+			echo json_encode(array('status' => 'error', 'message' => 'Failed to update category! Contact administrator for help.'));
+		}
+	}
+
+	function delete_category() {
+		extract($_POST);
+	
+		if (!empty($category_id)) {
+			try {
+				$delete = $this->db->prepare("DELETE FROM categories WHERE id = ?");
+				if (!$delete) {
+					throw new Exception("Failed to prepare the query.");
+				}
+	
+				$delete->bind_param("i", $category_id);
+
+				if (!$delete->execute()) {
+					throw new Exception("Failed to execute the query.");
+				}
+	
+				if ($delete->affected_rows > 0) {
+					echo json_encode(array('status' => 'success', 'redirect_url' => 'index.php?page=categories'));
+				} else {
+					echo json_encode(array('status' => 'error', 'message' => 'Category not found or already deleted.'));
+				}
+			} catch (Exception $e) {
+				echo json_encode(array('status' => 'error', 'message' => 'Failed to delete category! Try again later.'));
+			}
+		} else {
+			// Invalid or empty category_id
+			echo json_encode(array('status' => 'error', 'message' => 'Invalid category ID.'));
+		}
+	}
+	
+	
+	
 	
 }
