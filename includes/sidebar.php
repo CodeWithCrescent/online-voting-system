@@ -4,7 +4,7 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-      <a class="nav-link nav-dashboard<?php echo (isset($_GET['page']) && ($_SESSION['login_type'] == 0 ? $_GET['page'] === 'dashboard' : $_GET['page'] === 'vote')) || ($_SERVER['SCRIPT_NAME'] === '/index.php') ? '' : ' collapsed'; ?>" href="index.php<?php echo $_SESSION['login_type'] == 0 ? '?page=dashboard' : '?page=vote'; ?>">
+      <a class="nav-link nav-dashboard<?php echo (isset($_GET['page']) && ($_SESSION['login_type'] == 0 ? $_GET['page'] === 'dashboard' : $_GET['page'] === 'vote')) || ($_SERVER['SCRIPT_NAME'] === 'index.php') ? '' : ' collapsed'; ?>" href="index.php<?php echo $_SESSION['login_type'] == 0 ? '?page=dashboard' : '?page=vote'; ?>">
           <i class="bi bi-grid"></i>
           <span>Dashboard</span>
         </a>
@@ -12,7 +12,7 @@
 
       <?php if($_SESSION['login_type'] == 0) { ?>
         <li class="nav-item">
-          <a class="nav-link<?php echo isset($_GET['page']) && $_GET['page'] === 'election_config' ? '' : ' collapsed'; ?>" href="index.php?page=election_config">
+          <a class="nav-link<?php echo isset($_GET['page']) && ($_GET['page'] === 'election_config' || $_GET['page'] === 'candidates') ? '' : ' collapsed'; ?>" href="index.php?page=election_config">
             <i class="bi bi-gear"></i>
             <span>Configuration</span>
           </a>
@@ -21,12 +21,6 @@
           <a class="nav-link<?php echo isset($_GET['page']) && $_GET['page'] === 'categories' ? '' : ' collapsed'; ?>" href="index.php?page=categories">
             <i class="bi bi-bookmark"></i>
             <span>Categories</span>
-          </a>
-        </li><!-- End Profile Page Nav -->
-        <li class="nav-item">
-          <a class="nav-link<?php echo isset($_GET['page']) && $_GET['page'] === 'candidates' ? '' : ' collapsed'; ?>" href="index.php?page=candidates">
-            <i class="bi bi-people"></i>
-            <span>Candidates</span>
           </a>
         </li><!-- End Profile Page Nav -->
 

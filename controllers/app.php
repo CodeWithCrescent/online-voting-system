@@ -28,9 +28,22 @@ if($action == 'add_election'){
 		echo $save;
 }
 
-if ($action == 'show_election') {
-    $data = $admin->show_election();
-    echo json_encode($data);
+if($action == 'update_election'){
+	$save = $admin->update_election();
+	if($save)
+		echo $save;
+}
+
+if($action == 'delete_election'){
+	$save = $admin->delete_election();
+	if($save)
+		echo $save;
+}
+
+if($action == 'election_status'){
+	$save = $admin->election_status();
+	if($save)
+		echo $save;
 }
 
 if($action == 'add_category'){
@@ -47,6 +60,12 @@ if($action == 'update_category'){
 
 if($action == 'delete_category'){
 	$save = $admin->delete_category();
+	if($save)
+		echo $save;
+}
+
+if($action == 'add_candidate'){
+	$save = $admin->add_candidate();
 	if($save)
 		echo $save;
 }

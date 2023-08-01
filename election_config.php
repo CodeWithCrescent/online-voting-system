@@ -40,14 +40,16 @@
                       
                   echo '<tr>
                     <th scope="row">'.$i++.'</th>
-                    <td><a href="index.php?page=candidates0&id='.$row['id'].'">'.$row['title'].'</a></td>
+                    <td><a href="index.php?page=candidates&election_id='.$row['id'].'">'.$row['title'].'</a></td>
                     <td>'.$row['year'];'</td>';
-                    if($row['status'] === 0){
-                      echo '<td><span class="badge rounded-pill bg-secondary">Not active</span></td>';
-                     }else{
-                      echo '<td><span class="badge rounded-pill bg-success">Active</span></td>';
-                     }
-                  echo '<td class="text-center"><a href="#" class="btn btn-outline-secondary btn-sm open-modal" data-bs-toggle="modal" data-bs-target="#viewElection" data-id="'.$row['id'].'"><i class="bi bi-eye"></i> View</a></td>
+                    if ($row['status'] === 0) {
+                      echo '<td><a href="#" name="status" class="btn badge rounded-pill btn-secondary election-status" data-id="'.$row['id'].'" data-status="1" data-name="Activate">Not active</a></td>';
+                  } else {
+                      echo '<td><a href="#" name="status" class="btn badge rounded-pill btn-success election-status" data-id="'.$row['id'].'" data-status="0" data-name="Deactivate">Active</a></td>';
+                  }                  
+                  echo '<td class="text-center"><a href="#" class="btn btn-secondary btn-sm open-modal" data-bs-toggle="modal" data-bs-target="#viewElection" data-id="'.$row['id'].'">View</a>
+                        <a href="#" class="btn btn-primary btn-sm edit-election-modal" data-bs-toggle="modal" data-bs-target="#editElection" data-id="'.$row['id'].'">Edit</a>
+                        <a href="#" class="btn btn-danger btn-sm delete-election" data-id="'.$row['id'].'" data-name="'.$row['title'].'">Delete</a></td>
                   </tr>';
                     } ?>
                 </tbody>
@@ -106,6 +108,22 @@
                 </div>
               </div><!-- End Add Election Modal Dialog -->
 
+              <!-- The Edit Election Modal -->
+              <div class="modal fade" id="editElection" tabindex="-1">
+                  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <h5 class="modal-title"></h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <!-- End Edit Election Modal Dialog -->
+
               <!-- The Modal -->
               <div class="modal fade" id="viewElection" tabindex="-1">
                   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -114,7 +132,7 @@
                               <h5 class="modal-title"></h5>
                               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                           </div>
-                          <div class="modal-body" id="viewElectionModalBoddy">
+                          <div class="modal-body">
 
                           </div>
                       </div>

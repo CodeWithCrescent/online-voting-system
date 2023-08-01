@@ -151,14 +151,16 @@ class Admin {
 
 	function add_election(){
 		extract($_POST);
+		$added_by = $_SESSION['login_username'];
+
 		if(empty($id)){
 			try {
-				$save = $this->db->prepare("INSERT INTO election (title, year, voters, starttime, endtime, description) VALUES (?, ?, ?, ?, ?, ?)");
+				$save = $this->db->prepare("INSERT INTO election (title, year, voters, starttime, endtime, description, added_by) VALUES (?, ?, ?, ?, ?, ?, ?)");
 				if (!$save) {
 					throw new Exception("Failed to prepare the query.");
 				}
 			
-				$save->bind_param("ssssss", $title, $year, $voters, $starttime, $endtime, $description);
+				$save->bind_param("sssssss", $title, $year, $voters, $starttime, $endtime, $description, $added_by);
 				if (!$save->execute()) {
 					throw new Exception("Failed to execute the query.");
 				}
@@ -175,35 +177,92 @@ class Admin {
 		}
 	}
 
-	function show_election() {
-		// extract($_POST);
-		// $stmt = $mysqli->prepare("SELECT title, year, voters, starttime, endtime, description FROM election WHERE id = ?");
-		// $stmt->bind_param("i", $electionId);
-		// $stmt->execute();
-		// $result = $stmt->get_result();
+	function update_election() {
+		extract($_POST);
+		$updated_by = $_SESSION['login_username'];
 	
-		// if ($result->num_rows > 0) {
-		// 	$data = $result->fetch_assoc();
-		// 	return $data; // Return the data instead of echoing it
-		// } else {
-		// 	return array('error' => 'Item not found'); // Return an array instead of echoing it
-		// }
+		if (!empty($election_id)) {
+			try {
+				$save = $this->db->prepare("UPDATE election SET title = ?, year = ?, voters = ?, starttime = ?, endtime = ?, description = ?, updated_by = ? WHERE id = ?");
+				if (!$save) {
+					throw new Exception("Failed to prepare the query.");
+				}
 	
-		// $stmt->close();
-		// $mysqli->close();
-		
-		// SAMPLE DATA
-		$data = array(
-			'title' => 'Sample Election Title',
-			'year' => '2023',
-			'voters' => '5000',
-			'starttime' => '2023-07-29 12:00:00',
-			'endtime' => '2023-07-29 18:00:00',
-			'description' => 'Sample election description...',
-		);
-		header('Content-Type: application/json');
-		echo json_encode($data);
+				$save->bind_param("sssssssi", $title, $year, $voters, $starttime, $endtime, $description, $updated_by, $election_id);
+	
+				if (!$save->execute()) {
+					throw new Exception("Failed to execute the query.");
+				}
+	
+				echo json_encode(array('status' => 'success', 'redirect_url' => 'index.php?page=election_config'));
+	
+			} catch (Exception $e) {
+				echo json_encode(array('status' => 'error', 'message' => 'Failed to update election! Try again later.'));
+			}
+	
+		} else {
+			// ID does not exist
+			echo json_encode(array('status' => 'error', 'message' => 'Failed to update election! Contact administrator for help.'));
+		}
+	}
 
+	function delete_election() {
+		extract($_POST);
+	
+		if (!empty($election_id)) {
+			try {
+				$delete = $this->db->prepare("DELETE FROM election WHERE id = ?");
+				if (!$delete) {
+					throw new Exception("Failed to prepare the query.");
+				}
+	
+				$delete->bind_param("i", $election_id);
+
+				if (!$delete->execute()) {
+					throw new Exception("Failed to execute the query.");
+				}
+	
+				if ($delete->affected_rows > 0) {
+					echo json_encode(array('status' => 'success', 'redirect_url' => 'index.php?page=election_config'));
+				} else {
+					echo json_encode(array('status' => 'error', 'message' => 'election not found or already deleted.'));
+				}
+			} catch (Exception $e) {
+				echo json_encode(array('status' => 'error', 'message' => 'Failed to delete election! Try again later.'));
+			}
+		} else {
+			// Invalid or empty election_id
+			echo json_encode(array('status' => 'error', 'message' => 'Invalid election ID.'));
+		}
+	}
+
+	function election_status() {
+		extract($_POST);
+		$updated_by = $_SESSION['login_username'];
+	
+		if (!empty($election_id)) {
+			try {
+				$save = $this->db->prepare("UPDATE election SET status = ?, updated_by = ? WHERE id = ?");
+				if (!$save) {
+					throw new Exception("Failed to prepare the query.");
+				}
+	
+				$save->bind_param("ssi", $status, $updated_by, $election_id);
+	
+				if (!$save->execute()) {
+					throw new Exception("Failed to execute the query.");
+				}
+	
+				echo json_encode(array('status' => 'success', 'redirect_url' => 'index.php?page=election_config'));
+	
+			} catch (Exception $e) {
+				echo json_encode(array('status' => 'error', 'message' => 'Failed to update status of election! Try again later.'));
+			}
+	
+		} else {
+			// ID does not exist
+			echo json_encode(array('status' => 'error', 'message' => 'Failed to update status of election! Contact administrator for help.'));
+		}
 	}
 
 	function add_category() {
@@ -293,6 +352,55 @@ class Admin {
 			echo json_encode(array('status' => 'error', 'message' => 'Invalid category ID.'));
 		}
 	}
+
+	function add_candidate()
+	{
+		extract($_POST);
+		$added_by = $_SESSION['login_username'];
+	
+		if (empty($category) || empty($candidate) || empty($candidate_year)) {
+			echo json_encode(array('status' => 'error', 'message' => 'Please fill in all the required fields.'));
+			return;
+		}
+	
+		try {
+			// Check if Category_id exists in the categories table
+			$check_category = $this->db->prepare("SELECT id FROM categories WHERE id = ?");
+			if (!$check_category) {
+				throw new Exception("Failed to prepare the query.");
+			}
+	
+			$check_category->bind_param("i", $category);
+	
+			if (!$check_category->execute()) {
+				throw new Exception("Failed to execute the query.");
+			}
+	
+			$result = $check_category->get_result();
+	
+			if ($result->num_rows === 0) {
+				echo json_encode(array('status' => 'error', 'message' => 'Invalid category. Please select a valid category.'));
+				return;
+			}
+	
+			$save_candidate = $this->db->prepare("INSERT INTO candidates (election_id, category_id, name, candidate_year, fellow_candidate_name, fellow_candidate_year, added_by, edited_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+			if (!$save_candidate) {
+				throw new Exception("Failed to prepare the query.");
+			}
+	
+			$save_candidate->bind_param("iisisiss", $election, $category, $candidate, $candidate_year, $fellow_candidate, $fellow_candidate_year, $added_by, $edited_by);
+	
+			if (!$save_candidate->execute()) {
+				throw new Exception("Failed to execute the query.");
+			}
+	
+			echo json_encode(array('status' => 'success', 'redirect_url' => 'index.php?page=candidates'));
+	
+		} catch (Exception $e) {
+			echo json_encode(array('status' => 'error', 'message' => 'Failed to add candidate! Try again later.'));
+		}
+	}
+	
 	
 	
 	

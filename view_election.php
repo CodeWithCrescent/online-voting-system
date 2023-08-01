@@ -42,11 +42,6 @@ if (isset($_GET['id'])) {
                   <div class="col-4 label"><strong>End On:</strong></div>
                   <div class="col-8 text-danger">'.$row['endtime'].'</div>
                 </div>
-              </div>
-              <div class="modal-footer text-center">
-                  <button type="button" class="btn btn-sm btn-primary"><i class="bi bi-gear"></i> Manage</button>
-                  <button id="editElectionButton" type="button" class="btn btn-sm btn-secondary"><i class="bi bi-pencil"></i> Edit</button>
-                  <button id="deleteButton" class="btn btn-sm btn-danger delete-election" data-id='.$row['id'].'><i class="bi bi-trash"></i> Delete</button>
               </div>';
         } else {
             echo "No data";

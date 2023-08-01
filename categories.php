@@ -40,7 +40,7 @@
                     <th scope="row">'.$i++.'</th>
                     <td>'.$row['name'].'</td>
                     <td class="text-center"><a href="#" class="btn btn-primary btn-sm category-modal" data-bs-toggle="modal" data-bs-target="#editCategory" data-id="'.$row['id'].'" data-name="'. $row['name'].'"><i class="bi bi-pencil"></i> Edit</a>
-                    <a href="#" class="btn btn-danger btn-sm category-delete" data-id="'.$row['id'].'"><i class="bi bi-trash"></i> Delete</a></td>
+                    <a href="#" class="btn btn-danger btn-sm category-delete" data-id="'.$row['id'].'" data-name="'.$row['name'].'"><i class="bi bi-trash"></i> Delete</a></td>
                   </tr>';
                     } ?>
                 </tbody>

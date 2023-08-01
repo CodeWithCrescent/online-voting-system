@@ -11,8 +11,8 @@
   <script src="assets/vendor/tinymce/tinymce.min.js"></script>
   <script src="assets/vendor/php-email-form/validate.js"></script>
   <script src="assets/vendor/jquery/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/dist/toastr.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/dist/toastr.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script> -->
 
   <!-- Fir Date Time Picker -->
 <script src="assets/vendor/bootstrap/js/moment.min.js"></script>
@@ -178,6 +178,92 @@ $('#add-election-form').submit(function(e){
 
 </script>
 
+<!-- Edit Election -->
+<script>
+	$('.edit-election-modal').click(function(){
+		editElection("Edit Election",'edit_election.php?id='+$(this).attr('data-id'))
+	})
+
+  window.editElection = function($title = '' , $url=''){
+    // start_load()
+    $.ajax({
+        url:$url,
+        error:err=>{
+            console.log()
+            alert("An error occured")
+        },
+        success:function(resp){
+            if(resp){
+                $('#editElection .modal-title').html($title)
+                $('#editElection .modal-body').html(resp)
+                $('#editElection').modal('show')
+                // end_load()
+            }
+        }
+    })
+  }
+
+  // jQuery AJAX form submission
+  $(document).on('submit', '#update-election-form', function (e) {
+        e.preventDefault();
+        
+    let isValid = true;
+    $("#update-election-form").find("input, select, textarea").each(function () {
+      const input = $(this);
+      const value = input.val().trim();
+      if (value === "") {
+        isValid = false;
+        input.addClass("is-invalid"); // Add a CSS class for invalid inputs
+        input.siblings(".invalid-feedback").text("This field is required."); // Show error message
+      } else {
+        input.removeClass("is-invalid"); // Remove the CSS class if input is valid
+        input.siblings(".invalid-feedback").text(""); // Clear error message
+      }
+    });
+
+    if (isValid) {
+
+      var formData = $(this).serialize();
+
+      $.ajax({
+        type: 'POST',
+        url: 'controllers/app.php?action=update_election',
+        data: formData,
+        dataType: 'json',
+        success: function (response) {
+          console.log(response);
+          if (response.status === 'success') {
+            location.href = response.redirect_url;
+          } else if (response.status === 'error') {
+            $('#update-election-form').prepend('<div class="alert alert-danger">' + response.message + '</div>');
+          } else {
+            $('#update-election-form').prepend('<div class="alert alert-danger">Unknown error occurred.</div>');
+          }
+        },
+        error: function (xhr, status, error) {
+          // Handle AJAX errors
+          console.error(error);
+          $('#update-election-form').prepend('<div class="alert alert-danger">An error occurred during the request.</div>');
+        }
+      });
+    }
+	})
+  // Real-time validation when the user enters the required field
+  $("#update-election-form").find("input, select, textarea").on("input", function () {
+    const input = $(this);
+    const value = input.val().trim();
+    const errorMessage = input.data("error-message");
+
+    if (value === "") {
+      input.addClass("is-invalid"); // Add a CSS class for invalid inputs
+      input.siblings(".invalid-feedback").text(errorMessage); // Show error message
+    } else {
+      input.removeClass("is-invalid"); // Remove the CSS class if input is valid
+      input.siblings(".invalid-feedback").text(""); // Clear error message
+    }
+  });
+</script>
+
 <script>
 	$('.open-modal').click(function(){
 		viewElection("Election Overview",'view_election.php?id='+$(this).attr('data-id'))
@@ -203,6 +289,91 @@ $('#add-election-form').submit(function(e){
         }
     })
   }
+</script>
+
+<!-- JavaScript code to handle the delete election confirmation -->
+<script>
+    $(document).on('click', '.delete-election', function (e) {
+        e.preventDefault();
+
+        var electionId = $(this).data('id');
+        var electionTitle = $(this).data('name');
+
+        var confirmed = confirm('Are you sure you want to delete '+electionTitle+'?');
+
+        // If the user confirms, proceed with deletion
+        if (confirmed) {
+            $.ajax({
+                type: 'POST',
+                url: 'controllers/app.php?action=delete_election',
+                data: { election_id: electionId },
+                dataType: 'json',
+                success: function (response) {
+                    console.log(response);
+                    if (response.status === 'success') {
+                    location.href = response.redirect_url;
+                        // toastr.success(response.message);
+                        // setTimeout(function(){
+                        //     location.reload();
+                        // }, 1500);
+                    } else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Handle AJAX errors, if any
+                    console.error(error);
+                    toastr.error('An error occurred during the request.');
+                }
+            });
+        } else {
+            // User canceled the deletion
+            toastr.info('Deletion canceled.');
+        }
+    });
+</script>
+
+<!-- JavaScript code to handle the status confirmation -->
+<script>
+    $(document).on('click', '.election-status', function (e) {
+        e.preventDefault();
+
+        var electionId = $(this).data('id');
+        var status = $(this).data('status');
+        var statusName = $(this).data('name');
+
+        var confirmed = confirm('Are you sure you want to '+statusName+' this Election?');
+
+        // If the user confirms, proceed with change election status
+        if (confirmed) {
+            $.ajax({
+                type: 'POST',
+                url: 'controllers/app.php?action=election_status',
+                data: { election_id: electionId, status: status },
+                dataType: 'json',
+                success: function (response) {
+                    console.log(response);
+                    if (response.status === 'success') {
+                    location.href = response.redirect_url;
+                        // toastr.success(response.message);
+                        // setTimeout(function(){
+                        //     location.reload();
+                        // }, 1500);
+                    } else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Handle AJAX errors, if any
+                    console.error(error);
+                    toastr.error('An error occurred during the request.');
+                }
+            });
+        } else {
+            // User canceled to change status
+            toastr.info('Status change canceled.');
+        }
+    });
 </script>
 
 <!-- Add Category JQuery -->  
@@ -325,8 +496,9 @@ $('#add-category-form').submit(function(e){
         e.preventDefault();
 
         var categoryId = $(this).data('id');
+        var categoryName = $(this).data('name');
 
-        var confirmed = confirm('Are you sure you want to delete this category?');
+        var confirmed = confirm('Are you sure you want to delete '+categoryName+' Category?');
 
         // If the user confirms, proceed with deletion
         if (confirmed) {
@@ -360,3 +532,40 @@ $('#add-category-form').submit(function(e){
     });
 </script>
 
+<script>
+  $(document).ready(function() {
+    // When a dropdown link is clicked
+    $(".dropdown-item").on("click", function() {
+      var modalId = $(this).data("modal"); // Get the modal ID from the data-modal attribute
+
+      // Open the corresponding modal
+      $(modalId).modal("show");
+    });
+  });
+</script>
+
+<!-- Edit Category -->
+<script>
+	$('.add-candidate').click(function(){
+		addCandidate("Add Candidate",'add_candidate.php?election_id='+$(this).attr('data-id'))
+	})
+
+  window.addCandidate = function($title = '' , $url=''){
+    // start_load()
+    $.ajax({
+        url:$url,
+        error:err=>{
+            console.log()
+            alert("An error occured")
+        },
+        success:function(resp){
+            if(resp){
+                $('#addCandidate .modal-title').html($title)
+                $('#addCandidate .modal-body').html(resp)
+                $('#addCandidate').modal('show')
+                // end_load()
+            }
+        }
+    })
+  }
+ </script>
