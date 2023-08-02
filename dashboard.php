@@ -152,7 +152,7 @@
                                 <div class="activite-label">32 min</div>
                                     <i class='bi bi-circle-fill activity-badge text-success align-self-start'></i>
                                 <div class="activity-content">
-                                    Quia quae rerum <a href="#" class="fw-bold text-dark">explicabo officiis</a> beatae
+                                Crescent: Verified and uploaded the list of eligible <a href="#" class="fw-bold text-dark">candidates</a> for the election
                                 </div>
                             </div><!-- End activity item-->
 
@@ -160,7 +160,7 @@
                                 <div class="activite-label">56 min</div>
                                     <i class='bi bi-circle-fill activity-badge text-danger align-self-start'></i>
                                 <div class="activity-content">
-                                    Voluptatem blanditiis blanditiis eveniet
+                                    George: Approved voter registration for Justo Kimei.
                                 </div>
                             </div><!-- End activity item-->
 
@@ -168,7 +168,7 @@
                                 <div class="activite-label">2 hrs</div>
                                     <i class='bi bi-circle-fill activity-badge text-primary align-self-start'></i>
                                 <div class="activity-content">
-                                    Voluptates corrupti molestias voluptatem
+                                    Crescent: Sent reminder emails to registered voters about upcoming elections.
                                 </div>
                             </div><!-- End activity item-->
 
@@ -176,7 +176,7 @@
                                 <div class="activite-label">1 day</div>
                                     <i class='bi bi-circle-fill activity-badge text-info align-self-start'></i>
                                 <div class="activity-content">
-                                    Tempore autem saepe <a href="#" class="fw-bold text-dark">occaecati voluptatem</a> tempore
+                                    Crescent: Added new <a href="#" class="fw-bold text-dark">category</a> for <a href="#" class="fw-bold text-dark">MUSTSO 2023</a> election
                                 </div>
                             </div><!-- End activity item-->
 
@@ -184,7 +184,7 @@
                                 <div class="activite-label">2 days</div>
                                     <i class='bi bi-circle-fill activity-badge text-warning align-self-start'></i>
                                 <div class="activity-content">
-                                    Est sit eum reiciendis exercitationem
+                                    George: Deleted Presidential candidate named Jakaya M. Kikwete
                                 </div>
                             </div><!-- End activity item-->
 
@@ -192,7 +192,7 @@
                                 <div class="activite-label">4 weeks</div>
                                     <i class='bi bi-circle-fill activity-badge text-muted align-self-start'></i>
                                 <div class="activity-content">
-                                    Dicta dolorem harum nulla eius. Ut quidem quidem sit quas
+                                    George: Added Presidential candidate named Jakaya M. Kikwete
                                 </div>
                             </div><!-- End activity item-->
 

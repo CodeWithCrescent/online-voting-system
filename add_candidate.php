@@ -8,9 +8,9 @@ if (isset($_GET['election_id']) && is_numeric($_GET['election_id'])) {
     exit;
 }
 
-$row = $conn->prepare("SELECT * FROM categories");
-$row->execute();
-$result = $row->get_result();
+$stmt = $conn->prepare("SELECT * FROM categories");
+$stmt->execute();
+$result = $stmt->get_result();
  ?>
 
 <form id="add-candidate-form">

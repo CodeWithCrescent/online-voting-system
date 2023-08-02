@@ -253,7 +253,7 @@ class Admin {
 					throw new Exception("Failed to execute the query.");
 				}
 	
-				echo json_encode(array('status' => 'success', 'redirect_url' => 'index.php?page=election_config'));
+				echo json_encode(array('status' => 'success', 'message' => 'Status change!'));
 	
 			} catch (Exception $e) {
 				echo json_encode(array('status' => 'error', 'message' => 'Failed to update status of election! Try again later.'));
@@ -271,12 +271,12 @@ class Admin {
 
 		if (empty($id)) {
 			try {
-				$save = $this->db->prepare("INSERT INTO categories (name, added_by) VALUES (?, ?)");
+				$save = $this->db->prepare("INSERT INTO categories (election_id, name, added_by) VALUES (?, ?, ?)");
 				if (!$save) {
 					throw new Exception("Failed to prepare the query.");
 				}
 	
-				$save->bind_param("ss", $category, $added_by);
+				$save->bind_param("iss", $election, $category, $added_by);
 	
 				if (!$save->execute()) {
 					throw new Exception("Failed to execute the query.");
@@ -340,7 +340,7 @@ class Admin {
 				}
 	
 				if ($delete->affected_rows > 0) {
-					echo json_encode(array('status' => 'success', 'redirect_url' => 'index.php?page=categories'));
+					echo json_encode(array('status' => 'success', 'message' => 'Successfully Deleted'));
 				} else {
 					echo json_encode(array('status' => 'error', 'message' => 'Category not found or already deleted.'));
 				}
@@ -349,7 +349,7 @@ class Admin {
 			}
 		} else {
 			// Invalid or empty category_id
-			echo json_encode(array('status' => 'error', 'message' => 'Invalid category ID.'));
+			echo json_encode(array('status' => 'error', 'message' => 'Invalid category.'));
 		}
 	}
 
@@ -398,6 +398,36 @@ class Admin {
 	
 		} catch (Exception $e) {
 			echo json_encode(array('status' => 'error', 'message' => 'Failed to add candidate! Try again later.'));
+		}
+	}
+
+	function delete_candidate() {
+		extract($_POST);
+	
+		if (!empty($candidate_id)) {
+			try {
+				$delete = $this->db->prepare("DELETE FROM candidates WHERE id = ?");
+				if (!$delete) {
+					throw new Exception("Failed to prepare the query.");
+				}
+	
+				$delete->bind_param("i", $candidate_id);
+
+				if (!$delete->execute()) {
+					throw new Exception("Failed to execute the query.");
+				}
+	
+				if ($delete->affected_rows > 0) {
+					echo json_encode(array('status' => 'success', 'message' => 'Successful Deleted'));
+				} else {
+					echo json_encode(array('status' => 'error', 'message' => 'Candidate not found or already deleted.'));
+				}
+			} catch (Exception $e) {
+				echo json_encode(array('status' => 'error', 'message' => 'Failed to delete Candidate! Try again later.'));
+			}
+		} else {
+			// Invalid or empty candidate_id
+			echo json_encode(array('status' => 'error', 'message' => 'Invalid Candidate.'));
 		}
 	}
 	

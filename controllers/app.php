@@ -69,3 +69,9 @@ if($action == 'add_candidate'){
 	if($save)
 		echo $save;
 }
+
+if($action == 'delete_candidate'){
+	$save = $admin->delete_candidate();
+	if($save)
+		echo $save;
+}

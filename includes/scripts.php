@@ -11,8 +11,8 @@
   <script src="assets/vendor/tinymce/tinymce.min.js"></script>
   <script src="assets/vendor/php-email-form/validate.js"></script>
   <script src="assets/vendor/jquery/jquery-3.6.0.min.js"></script>
-  <!-- <script src="https://cdn.jsdelivr.net/npm/toastr@2.1.4/dist/toastr.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script> -->
+  <script src="assets/vendor/toastr/toastr.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script> -->
 
   <!-- Fir Date Time Picker -->
 <script src="assets/vendor/bootstrap/js/moment.min.js"></script>
@@ -311,11 +311,11 @@ $('#add-election-form').submit(function(e){
                 success: function (response) {
                     console.log(response);
                     if (response.status === 'success') {
-                    location.href = response.redirect_url;
-                        // toastr.success(response.message);
-                        // setTimeout(function(){
-                        //     location.reload();
-                        // }, 1500);
+                    // location.href = response.redirect_url;
+                        toastr.success(response.message);
+                        setTimeout(function(){
+                            location.reload();
+                        }, 1500);
                     } else {
                         toastr.error(response.message);
                     }
@@ -354,11 +354,11 @@ $('#add-election-form').submit(function(e){
                 success: function (response) {
                     console.log(response);
                     if (response.status === 'success') {
-                    location.href = response.redirect_url;
-                        // toastr.success(response.message);
-                        // setTimeout(function(){
-                        //     location.reload();
-                        // }, 1500);
+                    // location.href = response.redirect_url;
+                        toastr.success(response.message);
+                        setTimeout(function(){
+                            location.reload();
+                        }, 1000);
                     } else {
                         toastr.error(response.message);
                     }
@@ -376,66 +376,112 @@ $('#add-election-form').submit(function(e){
     });
 </script>
 
-<!-- Add Category JQuery -->  
-<script>  
-$('#add-category-form').submit(function(e){
-		e.preventDefault()
+<!-- Add Category -->
+<script>
+	$('.add-category').click(function(){
+		addCategory("Add Category",'add_category.php?election_id='+$(this).attr('data-id'))
+	})
 
-    let isValid = true;
-    $("#add-category-form").find("input").each(function () {
-      const input = $(this);
-      const value = input.val().trim();
-      if (value === "") {
-        isValid = false;
-        input.addClass("is-invalid"); // Add a CSS class for invalid inputs
-        input.siblings(".invalid-feedback").text("Category is required."); // Show error message
-      } else {
-        input.removeClass("is-invalid"); // Remove the CSS class if input is valid
-        input.siblings(".invalid-feedback").text(""); // Clear error message
-      }
+  window.addCategory = function($title = '' , $url=''){
+    // start_load()
+    $.ajax({
+        url:$url,
+        error:err=>{
+            console.log()
+            alert("An error occured")
+        },
+        success:function(resp){
+            if(resp){
+                $('#addCategory .modal-title').html($title)
+                $('#addCategory .modal-body').html(resp)
+                $('#addCategory').modal('show')
+                // end_load()
+            }
+        }
+    })
+  }
+ </script>
+
+<script>
+    // fetch and display categories based on the selected election_id
+    function fetchCategories(electionId) {
+        $.ajax({
+            url: 'fetch_categories.php',
+            type: 'GET',
+            data: { election_id: electionId },
+            dataType: 'json',
+            success: function (data) {
+                $('#categoriesTableBody').empty();
+
+                $.each(data, function (index, category) {
+                    var row = '<tr>' +
+                        '<td>' + (index + 1) + '</td>' +
+                        '<td>' + category.name + '</td>' +
+                        '<td class="text-center">' +
+                        '<a href="#" class="btn btn-primary btn-sm category-modal" data-bs-toggle="modal" data-bs-target="#editCategory" data-id="' + category.id + '" data-name="' + category.name + '">' +
+                        '<i class="bi bi-pencil"></i> Edit' +
+                        '</a>' +
+                        '<a href="#" class="btn btn-danger btn-sm category-delete" data-id="' + category.id + '" data-name="' + category.name + '">' +
+                        '<i class="bi bi-trash"></i> Delete' +
+                        '</a>' +
+                        '</td>' +
+                        '</tr>';
+
+                    $('#categoriesTableBody').append(row);
+                });
+
+                // Show the table or hide it
+                if (data.length > 0) {
+                    $('#categoriesTable').show();
+                } else {
+                    $('#categoriesTable').hide();
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log('Error: ' + error);
+            }
+        });
+    }
+
+    $('#election').on('change', function () {
+        var selectedElectionId = $(this).val();
+        if (selectedElectionId !== '') {
+            fetchCategories(selectedElectionId);
+        } else {
+            $('#categoriesTable').hide();
+        }
+    });
+</script>
+<script>
+    // Function to enable or disable the "Add New" button based on the selected election_id
+    function updateAddButtonState() {
+        var selectedElectionId = $('#election').val();
+        var addButton = $('.add-category');
+
+        if (selectedElectionId !== '') {
+            addButton.removeClass('disabled');
+            addButton.attr('data-id', selectedElectionId);
+        } else {
+            addButton.addClass('disabled');
+            addButton.attr('data-id', '');
+        }
+    }
+
+    // Event listener for select element to update the "Add New" button state
+    $('#election').on('change', function () {
+        updateAddButtonState();
     });
 
-    if (isValid) {
-
-      $.ajax({
-        url:'controllers/app.php?action=add_category',
-        method:'POST',
-        data:$(this).serialize(),
-        success:function(resp){
-          var response = JSON.parse(resp);
-          if (response.status === 'success') {
-            location.href = response.redirect_url;
-          }
-          else if(response.status === 'errors'){
-            $('#add-category-form').prepend('<div class="alert alert-danger">'+response.message+'</div>');
-
-          }
-          else {
-            $('#add-category-form').prepend('<div class="alert alert-danger">'+response.message+'</div>');
-          }
-        }
-      })
-    }
-	})
-  // Real-time validation when the user enters the required field
-  $("#add-category-form").find("input").on("input", function () {
-    const input = $(this);
-    const value = input.val().trim();
-    const errorMessage = input.data("error-message");
-
-    if (value === "") {
-      input.addClass("is-invalid"); // Add a CSS class for invalid inputs
-      input.siblings(".invalid-feedback").text(errorMessage); // Show error message
-    } else {
-      input.removeClass("is-invalid"); // Remove the CSS class if input is valid
-      input.siblings(".invalid-feedback").text(""); // Clear error message
-    }
-  });
+    // Initial call to update the "Add New" button state on page load
+    updateAddButtonState();
 </script>
+
+
+
 
 <!-- Edit Category -->
 <script>
-	$('.category-modal').click(function(){
+	$('.edit-category').click(function(){
 		editCategory("Edit Category",'edit_category.php?id='+$(this).attr('data-id'))
 	})
 
@@ -500,7 +546,7 @@ $('#add-category-form').submit(function(e){
 
         var confirmed = confirm('Are you sure you want to delete '+categoryName+' Category?');
 
-        // If the user confirms, proceed with deletion
+        // If the user confirms, to proceed with deletion
         if (confirmed) {
             $.ajax({
                 type: 'POST',
@@ -510,11 +556,11 @@ $('#add-category-form').submit(function(e){
                 success: function (response) {
                     console.log(response);
                     if (response.status === 'success') {
-                    location.href = response.redirect_url;
-                        // toastr.success(response.message);
-                        // setTimeout(function(){
-                        //     location.reload();
-                        // }, 1500);
+                    // location.href = response.redirect_url;
+                        toastr.success(response.message);
+                        setTimeout(function(){
+                            location.reload();
+                        }, 1500);
                     } else {
                         toastr.error(response.message);
                     }
@@ -544,7 +590,7 @@ $('#add-category-form').submit(function(e){
   });
 </script>
 
-<!-- Edit Category -->
+<!-- Add Candidate -->
 <script>
 	$('.add-candidate').click(function(){
 		addCandidate("Add Candidate",'add_candidate.php?election_id='+$(this).attr('data-id'))
@@ -569,3 +615,44 @@ $('#add-category-form').submit(function(e){
     })
   }
  </script>
+ 
+<script>
+    $(document).on('click', '.delete-candidate', function (e) {
+        e.preventDefault();
+
+        var candidateId = $(this).data('id');
+        var candidateName = $(this).data('name');
+        var candidateCategory = $(this).data('category');
+
+        var confirmed = confirm('Are you sure you want to delete '+candidateName+' from '+candidateCategory+'?');
+
+        // If the user confirms, proceed with deletion
+        if (confirmed) {
+            $.ajax({
+                type: 'POST',
+                url: 'controllers/app.php?action=delete_candidate',
+                data: { candidate_id: candidateId },
+                dataType: 'json',
+                success: function (response) {
+                    console.log(response);
+                    if (response.status === 'success') {
+                        toastr.success(response.message);
+                        setTimeout(function(){
+                            location.reload();
+                        }, 1500);
+                    } else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Handle AJAX errors
+                    console.error(error);
+                    toastr.error('An error occurred during the request.');
+                }
+            });
+        } else {
+            // User canceled the deletion
+            toastr.info('Deletion canceled.');
+        }
+    });
+</script>
