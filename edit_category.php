@@ -8,7 +8,7 @@ if (isset($_GET['id'])) {
 
     if ($result) {
         $row = $result->fetch_assoc();
-        if($row) { ?>
+        if ($row) { ?>
             <form id="update-category-form">
                 <div class="row g-3">
                     <div class="col-md-12">
@@ -23,16 +23,14 @@ if (isset($_GET['id'])) {
                     <button type="submit" class="btn btn-primary">Update Category</button>
                 </div>
             </form>
-    <?php    }
+<?php    }
     } else {
         echo "Error executing the query.";
     }
 
     $conn->close();
-}
- else {
-    
+} else {
+
     echo "500 Error! No id found in URL.";
 }
 ?>
-

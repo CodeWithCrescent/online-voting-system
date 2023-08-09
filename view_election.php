@@ -12,7 +12,7 @@ if (isset($_GET['id'])) {
         echo '<div class="card-body">
                 <h3 class="card-title">'.$row['title'].'</h3>
                 <p class="small fst-italic">'.$row['description'].'</p>';
-
+                // ($row['status'] == 1) ? 'Deactivate' : 'Activate';
                 if($row['status'] == 0) {
                     echo '<h5><span class="badge bg-secondary">The election is not active</span></h5>';
                    }
@@ -56,5 +56,3 @@ if (isset($_GET['id'])) {
     
     echo "500 Error! No id found in URL.";
 }
-?>
-

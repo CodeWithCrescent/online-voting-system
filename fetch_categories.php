@@ -18,4 +18,3 @@ if (isset($_GET['election_id']) && is_numeric($_GET['election_id'])) {
 } else {
     echo json_encode(array());
 }
-?>

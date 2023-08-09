@@ -928,9 +928,14 @@
     background: #e0f8e9;
   }
   
-  .dashboard .contenstant-card .card-icon {
+  .dashboard .candidates-card .card-icon {
     /* border: 2px solid #012970; */
     /* color: #012970 ; */
+    color: #fff;
+    background: #51678f;
+  }
+
+  .users-list .users-list-card .card-icon {
     color: #fff;
     background: #51678f;
   }

@@ -1,18 +1,18 @@
-<?php 
-  session_start();
-  if(isset($_SESSION['login_id'])){
-    if($_SESSION['login_type'] == 0){
-      header("location:index.php?page=dashboard");
-    }else{
-      header("location:index.php?page=vote");
-    }
-    exit();
+<?php
+session_start();
+if (isset($_SESSION['login_id'])) {
+  if ($_SESSION['login_type'] == 0) {
+    header("location:index.php?page=dashboard");
+  } else {
+    header("location:index.php?page=vote");
   }
+  exit();
+}
 
 echo '<!DOCTYPE html>
 <html lang="en">';
 
-  include 'includes/head.php';
+include 'includes/head.php';
 ?>
 
 <body>
@@ -28,7 +28,7 @@ echo '<!DOCTYPE html>
               <div class="d-flex justify-content-center py-4">
                 <a href="index.php" class="logo d-flex align-items-center w-auto">
                   <img src="assets/img/logo.jpg" alt="">
-                  <span class="d-none d-lg-block">SIMS Online Voting</span>
+                  <span class="d-none d-lg-block">Online Voting System</span>
                 </a>
               </div><!-- End Logo -->
 
@@ -42,7 +42,7 @@ echo '<!DOCTYPE html>
                   </div>
 
                   <form class="row g-3" novalidate id="login-form">
-                    
+
                     <div class="col-12">
                       <label for="username" class="form-label">Username</label>
                       <div class="input-group has-validation">
@@ -60,7 +60,7 @@ echo '<!DOCTYPE html>
                         <div id="password-error-msg" class="invalid-feedback"></div>
                       </div>
                     </div>
-                    
+
                     <div class="col-12">
                       <button class="btn btn-primary w-100">Login</button>
                     </div>
@@ -72,20 +72,20 @@ echo '<!DOCTYPE html>
                 </div>
               </div>
 
-              </div>
-
             </div>
+
           </div>
         </div>
+    </div>
 
-      </section>
+    </section>
 
     </div>
   </main><!-- End #main -->
 
-<?php
+  <?php
   include 'includes/scripts.php';
-?>
+  ?>
 
 </body>
 

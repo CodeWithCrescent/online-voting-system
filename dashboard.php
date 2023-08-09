@@ -1,11 +1,11 @@
     <div class="pagetitle">
-      <h1>MUSTSO 2023 Election</h1>
-      <nav>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="#">Home</a></li>
-          <li class="breadcrumb-item active">Dashboard</li>
-        </ol>
-      </nav>
+        <h1>Dashboard</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item active">Dashboard</li>
+            </ol>
+        </nav>
     </div><!-- End Page Title -->
 
     <section class="section dashboard">
@@ -20,7 +20,7 @@
                                 <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
                                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                                     <li class="dropdown-header text-start">
-                                    <h6>Filter</h6>
+                                        <h6>Filter</h6>
                                     </li>
 
                                     <li><a class="dropdown-item" href="#">Today</a></li>
@@ -55,7 +55,7 @@
                                 <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
                                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                                     <li class="dropdown-header text-start">
-                                    <h6>Filter</h6>
+                                        <h6>Filter</h6>
                                     </li>
 
                                     <li><a class="dropdown-item" href="#">Today</a></li>
@@ -109,7 +109,7 @@
                         <div class="card info-card revenue-card">
 
                             <div class="card-body">
-                                <h5 class="card-title">Contestants <span>| All</span></h5>
+                                <h5 class="card-title">Candidates <span>| All</span></h5>
 
                                 <div class="d-flex align-items-center">
                                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -134,7 +134,7 @@
                         <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
                         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                             <li class="dropdown-header text-start">
-                            <h6>Filter</h6>
+                                <h6>Filter</h6>
                             </li>
 
                             <li><a class="dropdown-item" href="#">Today</a></li>
@@ -150,15 +150,15 @@
 
                             <div class="activity-item d-flex">
                                 <div class="activite-label">32 min</div>
-                                    <i class='bi bi-circle-fill activity-badge text-success align-self-start'></i>
+                                <i class='bi bi-circle-fill activity-badge text-success align-self-start'></i>
                                 <div class="activity-content">
-                                Crescent: Verified and uploaded the list of eligible <a href="#" class="fw-bold text-dark">candidates</a> for the election
+                                    Crescent: Verified and uploaded the list of eligible <a href="#" class="fw-bold text-dark">candidates</a> for the election
                                 </div>
                             </div><!-- End activity item-->
 
                             <div class="activity-item d-flex">
                                 <div class="activite-label">56 min</div>
-                                    <i class='bi bi-circle-fill activity-badge text-danger align-self-start'></i>
+                                <i class='bi bi-circle-fill activity-badge text-danger align-self-start'></i>
                                 <div class="activity-content">
                                     George: Approved voter registration for Justo Kimei.
                                 </div>
@@ -166,7 +166,7 @@
 
                             <div class="activity-item d-flex">
                                 <div class="activite-label">2 hrs</div>
-                                    <i class='bi bi-circle-fill activity-badge text-primary align-self-start'></i>
+                                <i class='bi bi-circle-fill activity-badge text-primary align-self-start'></i>
                                 <div class="activity-content">
                                     Crescent: Sent reminder emails to registered voters about upcoming elections.
                                 </div>
@@ -174,7 +174,7 @@
 
                             <div class="activity-item d-flex">
                                 <div class="activite-label">1 day</div>
-                                    <i class='bi bi-circle-fill activity-badge text-info align-self-start'></i>
+                                <i class='bi bi-circle-fill activity-badge text-info align-self-start'></i>
                                 <div class="activity-content">
                                     Crescent: Added new <a href="#" class="fw-bold text-dark">category</a> for <a href="#" class="fw-bold text-dark">MUSTSO 2023</a> election
                                 </div>
@@ -182,7 +182,7 @@
 
                             <div class="activity-item d-flex">
                                 <div class="activite-label">2 days</div>
-                                    <i class='bi bi-circle-fill activity-badge text-warning align-self-start'></i>
+                                <i class='bi bi-circle-fill activity-badge text-warning align-self-start'></i>
                                 <div class="activity-content">
                                     George: Deleted Presidential candidate named Jakaya M. Kikwete
                                 </div>
@@ -190,7 +190,7 @@
 
                             <div class="activity-item d-flex">
                                 <div class="activite-label">4 weeks</div>
-                                    <i class='bi bi-circle-fill activity-badge text-muted align-self-start'></i>
+                                <i class='bi bi-circle-fill activity-badge text-muted align-self-start'></i>
                                 <div class="activity-content">
                                     George: Added Presidential candidate named Jakaya M. Kikwete
                                 </div>

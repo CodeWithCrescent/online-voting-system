@@ -1,18 +1,18 @@
-<?php 
-  session_start();
-  if(isset($_SESSION['login_id'])){
-    if($_SESSION['login_type'] == 0){
-      header("location:index.php?page=dashboard");
-    }else{
-      header("location:index.php?page=vote");
-    }
-    exit();
+<?php
+session_start();
+if (isset($_SESSION['login_id'])) {
+  if ($_SESSION['login_type'] == 0) {
+    header("location:index.php?page=dashboard");
+  } else {
+    header("location:index.php?page=vote");
   }
+  exit();
+}
 
 echo '<!DOCTYPE html>
 <html lang="en">';
 
-  include 'includes/head.php'
+include 'includes/head.php'
 ?>
 
 <body>
@@ -28,7 +28,7 @@ echo '<!DOCTYPE html>
               <div class="d-flex justify-content-center py-4">
                 <a href="index.php" class="logo d-flex align-items-center w-auto">
                   <img src="assets/img/logo.jpg" alt="">
-                  <span class="d-none d-lg-block">SIMS Online Voting</span>
+                  <span class="d-none d-lg-block">Online Voting System</span>
                 </a>
               </div><!-- End Logo -->
 
@@ -68,7 +68,7 @@ echo '<!DOCTYPE html>
                       <input type="Password" name="confirmPassword" class="form-control" id="comfirmPassword" required>
                       <div id="comfirmPassword-error-msg" class="invalid-feedback">Please repeat your password!</div>
                     </div>
-                    
+
                     <div class="col-12">
                       <button class="btn btn-primary w-100">Create Account</button>
                     </div>
@@ -89,93 +89,93 @@ echo '<!DOCTYPE html>
     </div>
   </main><!-- End #main -->
 
-<?php
+  <?php
   include 'includes/scripts.php';
-?>
+  ?>
 
-</body>  
+</body>
 <!-- Custom register Form JS -->
 <script>
-    var registerForm = document.getElementById('register-form');
-    var nameInput = document.getElementById('name');
-    var usernameInput = document.getElementById('username');
-    var passwordInput = document.getElementById('password');
-    var comfirmPasswordInput = document.getElementById('comfirmPassword');
-    var nameErrorMsg = document.getElementById('name-error-msg');
-    var usernameErrorMsg = document.getElementById('username-error-msg');
-    var passwordErrorMsg = document.getElementById('password-error-msg');
-    var comfirmPasswordErrorMsg = document.getElementById('comfirmPassword-error-msg');
+  var registerForm = document.getElementById('register-form');
+  var nameInput = document.getElementById('name');
+  var usernameInput = document.getElementById('username');
+  var passwordInput = document.getElementById('password');
+  var comfirmPasswordInput = document.getElementById('comfirmPassword');
+  var nameErrorMsg = document.getElementById('name-error-msg');
+  var usernameErrorMsg = document.getElementById('username-error-msg');
+  var passwordErrorMsg = document.getElementById('password-error-msg');
+  var comfirmPasswordErrorMsg = document.getElementById('comfirmPassword-error-msg');
 
-    registerForm.addEventListener('submit', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
+  registerForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+    event.stopPropagation();
 
-        // Reset error messages
-        nameErrorMsg.textContent = '';
-        usernameInput.textContent = '';
-        passwordErrorMsg.textContent = '';
-        comfirmPasswordErrorMsg.textContent = '';
+    // Reset error messages
+    nameErrorMsg.textContent = '';
+    usernameInput.textContent = '';
+    passwordErrorMsg.textContent = '';
+    comfirmPasswordErrorMsg.textContent = '';
 
-        if (!registerForm.checkValidity()) {
-            // Show custom error messages for unvalidated fields
-            if (!usernameInput.checkValidity()) {
-                if (usernameInput.validity.valueMissing) {
-                    usernameErrorMsg.textContent = 'Please enter a username.';
-                }
+    if (!registerForm.checkValidity()) {
+      // Show custom error messages for unvalidated fields
+      if (!usernameInput.checkValidity()) {
+        if (usernameInput.validity.valueMissing) {
+          usernameErrorMsg.textContent = 'Please enter a username.';
+        }
+      }
+
+      if (!nameInput.checkValidity()) {
+        if (nameInput.validity.valueMissing) {
+          nameErrorMsg.textContent = 'Please enter a name.';
+        }
+      }
+
+      if (!passwordInput.checkValidity()) {
+        if (passwordInput.validity.valueMissing) {
+          passwordErrorMsg.textContent = 'Please provide a password.';
+        }
+      }
+
+      if (!comfirmPasswordInput.checkValidity()) {
+        if (comfirmPasswordInput.validity.valueMissing) {
+          comfirmPasswordErrorMsg.textContent = 'Please repeat your password.';
+        }
+      }
+    } else {
+      // If form is valid, proceed with AJAX call to the server
+      var formData = new FormData(registerForm);
+      $.ajax({
+        url: 'controllers/app.php?action=register',
+        method: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        error: function(err) {
+          console.log(err);
+        },
+        success: function(resp) {
+          var response = JSON.parse(resp);
+          if (response.status === 'success') {
+            location.href = response.redirect_url;
+          } else {
+            // Show the error message received from the server
+            if (response.status === 'username') {
+              $('#register-form').prepend('<div class="alert alert-danger">' + response.message + '</div>');
+              $('#register-form button[type="button"]').removeAttr('disabled').html('register');
+              usernameInput.classList.add('is-invalid');
+            } else {
+              $('#register-form').prepend('<div class="alert alert-danger">' + response.message + '</div>');
+              $('#register-form button[type="button"]').removeAttr('disabled').html('register');
+              passwordInput.classList.add('is-invalid');
             }
-
-            if (!nameInput.checkValidity()) {
-                if (nameInput.validity.valueMissing) {
-                    nameErrorMsg.textContent = 'Please enter a name.';
-                }
-            }
-
-            if (!passwordInput.checkValidity()) {
-                if (passwordInput.validity.valueMissing) {
-                    passwordErrorMsg.textContent = 'Please provide a password.';
-                }
-            }
-
-            if (!comfirmPasswordInput.checkValidity()) {
-                if (comfirmPasswordInput.validity.valueMissing) {
-                    comfirmPasswordErrorMsg.textContent = 'Please repeat your password.';
-                }
-            }
-        } else {
-            // If form is valid, proceed with AJAX call to the server
-            var formData = new FormData(registerForm);
-            $.ajax({
-                url: 'controllers/app.php?action=register',
-                method: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                error: function(err) {
-                    console.log(err);
-                },
-                success: function(resp) {
-                    var response = JSON.parse(resp);
-                    if (response.status === 'success') {
-                        location.href = response.redirect_url;
-                    } else {
-                        // Show the error message received from the server
-                        if (response.status === 'username') {
-                          $('#register-form').prepend('<div class="alert alert-danger">'+response.message+'</div>');
-                          $('#register-form button[type="button"]').removeAttr('disabled').html('register');
-                          usernameInput.classList.add('is-invalid');
-                        } else {
-                          $('#register-form').prepend('<div class="alert alert-danger">'+response.message+'</div>');
-                          $('#register-form button[type="button"]').removeAttr('disabled').html('register');
-                          passwordInput.classList.add('is-invalid');
-                        }
-                    }
-                }
-            });
           }
+        }
+      });
+    }
 
-        registerForm.classList.add('was-validated');
-    }, false);
-  </script>
+    registerForm.classList.add('was-validated');
+  }, false);
+</script>
 
 
 </html>
