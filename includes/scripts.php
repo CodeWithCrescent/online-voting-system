@@ -784,6 +784,27 @@
   });
 </script>
 
+<script>
+  var endTime = new Date("<?php echo $end_time; ?>");
+
+  var countdownInterval = setInterval(function() {
+    var now = new Date();
+    var timeLeft = endTime - now;
+
+    if (timeLeft <= 0) {
+      clearInterval(countdownInterval);
+      document.getElementById("countdown").textContent = "Voting has ended.";
+    } else {
+      var days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+      document.getElementById("countdown").textContent = days + "d " + hours + "h " + minutes + "m " + seconds + "s";
+    }
+  }, 1000);
+</script>
+
 <!-- USER -->
 <script>
   new DataTable('#users-table', {
