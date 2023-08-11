@@ -119,9 +119,6 @@
   transition: border-color 0.3s, background-color 0.3s;
 }
 
-
-
-
   .vote-check-input, .round-vote-check::before {
     content: '';
     display: inline-block;
@@ -131,6 +128,20 @@
     border: 2px solid #198754;
     background-color: #fff;
     cursor: pointer;
+  }
+  
+  /*--------------------------------------------------------------
+  # Vote Details Title
+  --------------------------------------------------------------*/
+  .section .vote-details-title {
+    text-align: start;
+  }
+  .vote-details-title {
+    padding: 5px auto 10px auto;
+    font-size: 18px;
+    font-weight: 500;
+    color: #012970;
+    font-family: "Poppins", sans-serif;
   }
   
   

@@ -1,4 +1,7 @@
-    <div class="pagetitle">
+<?php
+include 'config/session.php';
+?>
+<div class="pagetitle">
       <h1>Election Configuration</h1>
       <nav>
         <ol class="breadcrumb">
@@ -15,7 +18,7 @@
           <a href="#" type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addElection">Click to Add</a>
         </div>
         <span class="small d-inline-block d-md-none" data-toggle="tooltip" data-placement="left" title="Scroll horizontally to view more content">
-          <i class="bi bi-arrows-expand"></i> Scroll Horizontally
+          <i class="bi bi-arrow-left-right"></i> Scroll Horizontally
         </span>
         <div class="card-body table-responsive">
 

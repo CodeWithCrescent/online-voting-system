@@ -137,6 +137,74 @@ class Auth
 		}
 		header("location: ../login.php");
 	}
+
+	function change_password()
+	{
+		extract($_POST);
+		$userId = $_SESSION['login_id'];
+
+		// Validation of user inputs
+		if (empty($currentPassword) || empty($newPassword) || empty($confirmNewPassword)) {
+			echo json_encode(array('status' => 'error', 'message' => 'Please fill in all fields.'));
+			exit();
+		}
+
+		// Prepare the statement to retrieve user data from the database
+		$stmt = $this->db->prepare("SELECT * FROM users WHERE id = ?");
+		$stmt->bind_param("i", $userId);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		$stmt->close();
+
+		if ($result->num_rows > 0) {
+			$user = $result->fetch_assoc();
+			if (password_verify($currentPassword, $user['password'])) {
+				if ($newPassword == $confirmNewPassword) {
+
+					$hashed_new_password = password_hash($newPassword, PASSWORD_DEFAULT);
+
+					$updateStmt = $this->db->prepare("UPDATE users SET password = ? WHERE id = ?");
+					$updateStmt->bind_param("si", $hashed_new_password, $userId);
+
+					if ($updateStmt->execute()) {
+						echo json_encode(array('status' => 'success', 'message' => 'Password changed successfully.'));
+					} else {
+						echo json_encode(array('status' => 'error', 'message' => 'Password change failed.'));
+					}
+					$updateStmt->close();
+				} else {
+					echo json_encode(array('status' => 'error', 'message' => 'New password and confirmation do not match.'));
+				}
+			} else {
+				echo json_encode(array('status' => 'error', 'message' => 'Incorrect old password.'));
+			}
+		} else {
+			echo json_encode(array('status' => 'error', 'message' => 'User not found.'));
+		}
+	}
+
+	function reset_password()
+	{
+		extract($_POST);
+		$new_password = password_hash("123456", PASSWORD_DEFAULT);
+
+		try {
+			$resetPassword = $this->db->prepare("UPDATE users SET password = ? WHERE id = ?");
+			if (!$resetPassword) {
+				throw new Exception("Failed to prepare the update query.");
+			}
+
+			$resetPassword->bind_param("si", $new_password, $user_id);
+
+			if (!$resetPassword->execute()) {
+				throw new Exception("Failed to execute the update query.");
+			}
+
+			echo json_encode(array('status' => 'success', 'message' => 'Password reset successful! New password: 123456'));
+		} catch (Exception $e) {
+			echo json_encode(array('status' => 'error', 'message' => 'Failed to reset password! Try again later.'));
+		}
+	}
 }
 
 class Admin
@@ -509,35 +577,150 @@ class Admin
 	{
 		extract($_POST);
 		$voter_id = $_SESSION['login_id'];
-	
+
 		if (!empty($selectedCandidates)) {
 			try {
+				// Check if User ID exists in the users table
+				$check_voter_id = $this->db->prepare("SELECT voter_id FROM votes WHERE voter_id = ?");
+				if (!$check_voter_id) {
+					throw new Exception("Failed to prepare the query.");
+				}
+
+				$check_voter_id->bind_param("i", $voter_id);
+
+				if (!$check_voter_id->execute()) {
+					throw new Exception("Failed to execute the query.");
+				}
+
+				$result = $check_voter_id->get_result();
+
+				if ($result->num_rows > 0) {
+					echo json_encode(array('status' => 'error', 'message' => 'Failed, You can only vote once per election!'));
+					return;
+				}
+
 				$save = $this->db->prepare("INSERT INTO votes (election_id, category_id, candidate_id, voter_id) VALUES (?, ?, ?, ?)");
 				if (!$save) {
 					throw new Exception("Failed to prepare the query.");
 				}
-	
+
 				foreach ($selectedCandidates as $candidate) {
 					$election_id = $candidate['election_id'];
 					$category_id = $candidate['category_id'];
 					$candidate_id = $candidate['candidate_id'];
-	
+
 					$save->bind_param("iiii", $election_id, $category_id, $candidate_id, $voter_id);
-	
+
 					if (!$save->execute()) {
 						throw new Exception("Failed to execute the query.");
 					}
 				}
-	
+
 				echo json_encode(array('status' => 'success', 'message' => 'YOU VOTED'));
-	
 			} catch (Exception $e) {
-				echo json_encode(array('status' => 'error', 'message' => 'Failed to Vote! Try again later.'.$e));
+				echo json_encode(array('status' => 'error', 'message' => 'Failed to Vote! Try again later.' . $e));
 			}
-	
 		} else {
 			// No Candidates Selected
-			echo json_encode(array('status' => 'errors', 'message' => 'Failed to Vote! No Candidate Selected.')); 
+			echo json_encode(array('status' => 'errors', 'message' => 'Failed to Vote! No Candidate Selected.'));
+		}
+	}
+
+	function update_profile()
+	{
+		extract($_POST);
+		$updated_by = $_SESSION['login_username'];
+
+		if (empty($fullName) || empty($username)) {
+			echo json_encode(array('status' => 'error', 'message' => 'Please fill in all the required fields.'));
+			return;
+		}
+
+		if (!empty($user)) {
+			try {
+				$current_user_id = $_SESSION['login_id'];
+
+				$check_username = $this->db->prepare("SELECT username FROM users WHERE username = ? AND id <> ?");
+				if (!$check_username) {
+					throw new Exception("Failed to prepare the query.");
+				}
+
+				$check_username->bind_param("si", $username, $current_user_id);
+
+				if (!$check_username->execute()) {
+					throw new Exception("Failed to execute the query.");
+				}
+
+				$result = $check_username->get_result();
+
+				if ($result->num_rows > 0) {
+					echo json_encode(array('status' => 'error', 'message' => 'Username already exists. Please use different.'));
+					return;
+				}
+
+				// Check if Email exists in the users table for other users
+				$check_email = $this->db->prepare("SELECT email FROM users WHERE email = ? AND id <> ?");
+				if (!$check_email) {
+					throw new Exception("Failed to prepare the query.");
+				}
+
+				$check_email->bind_param("si", $email, $current_user_id);
+
+				if (!$check_email->execute()) {
+					throw new Exception("Failed to execute the query.");
+				}
+
+				$result = $check_email->get_result();
+
+				if ($result->num_rows > 0) {
+					echo json_encode(array('status' => 'error', 'message' => 'Email already exists. Please use different.'));
+					return;
+				}
+
+				$save_user = $this->db->prepare("UPDATE users SET name = ?, username = ?, email = ?, phone = ? WHERE id = ?");
+				if (!$save_user) {
+					throw new Exception("Failed to prepare the query.");
+				}
+
+				$save_user->bind_param("ssssi", $fullName, $username, $email, $phone, $user);
+
+
+				if (!$save_user->execute()) {
+					throw new Exception("Failed to execute the query.");
+				}
+
+				echo json_encode(array('status' => 'success', 'message' => 'Successful Profile Updated!'));
+			} catch (Exception $e) {
+				echo json_encode(array('status' => 'error', 'message' => 'Failed to update profile! Try again later.'));
+			}
+		}
+	}
+
+	function user_type()
+	{
+		extract($_POST);
+		$updated_by = $_SESSION['login_id'];
+
+		if (!empty($user_id)) {
+			try {
+				$changeUserType = $this->db->prepare("UPDATE users SET type = ?, updated_by = ? WHERE id = ?");
+				if (!$changeUserType) {
+					throw new Exception("Failed to prepare the update query.");
+				}
+
+				$changeUserType->bind_param("iii", $type, $updated_by, $user_id);
+
+				if (!$changeUserType->execute()) {
+					throw new Exception("Failed to execute the update query.");
+				}
+
+				echo json_encode(array('status' => 'success', 'message' => 'User type changed!'));
+			} catch (Exception $e) {
+				echo json_encode(array('status' => 'error', 'message' => 'Failed to update user type! Try again later.'));
+			}
+		} else {
+			// ID does not exist
+			echo json_encode(array('status' => 'error', 'message' => 'Failed to update user type! Contact administrator for help.'));
 		}
 	}
 }

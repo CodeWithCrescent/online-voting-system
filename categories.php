@@ -1,5 +1,6 @@
 <?php
 include 'config/dbconnection.php';
+include 'config/session.php';
 
 $row = $conn->prepare("SELECT * FROM election");
 $row->execute();
@@ -61,10 +62,10 @@ $result = $row->get_result();
                                   <th scope="row">' . $i++ . '</th>
                                   <td>' . $row['name'] . '</td>
                                   <td class="text-center">
-                                      <a href="#" class="btn btn-primary btn-sm edit-category" data-bs-toggle="modal" data-bs-target="#editCategory" data-id="' . $row['id'] . '" data-name="' . $row['name'] . '">
+                                      <a href="#s" class="btn btn-primary btn-sm edit-categor" data-id="' . $row['id'] . '" data-name="' . $row['name'] . '">
                                           <i class="bi bi-pencil"></i> Edit
                                       </a>
-                                      <a href="#" class="btn btn-danger btn-sm category-delete" data-id="' . $row['id'] . '" data-name="' . $row['name'] . '">
+                                      <a href="#" class="btn btn-danger btn-sm category-dellete" data-id="' . $row['id'] . '" data-name="' . $row['name'] . '">
                                           <i class="bi bi-trash"></i> Delete
                                       </a>
                                   </td>
@@ -72,7 +73,7 @@ $result = $row->get_result();
                         }
                     } else {
                         echo '<tr>
-                              <td colspan="3" class="text-center text-muted">Select an Election to add and view categories.</td>
+                              <td colspan="3" class="text-center text-muted py-5 border-bottom-0">Select an Election to add and view categories.</td>
                           </tr>';
                     }
                     ?>

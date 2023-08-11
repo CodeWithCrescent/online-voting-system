@@ -1,3 +1,6 @@
+<?php 
+include 'config/session.php';
+?>
     <div class="pagetitle">
         <h1>Dashboard</h1>
         <nav>

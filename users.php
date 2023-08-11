@@ -1,5 +1,6 @@
 <?php
 include 'config/dbconnection.php';
+include 'config/session.php';
 
 $users = $conn->prepare("SELECT * FROM users");
 $users->execute();
@@ -22,37 +23,40 @@ $row = $users->get_result();
             <h5 class="card-title m-0">All Users</h5>
         </div>
         <span class="small d-inline-block d-md-none" data-toggle="tooltip" data-placement="left" title="Scroll horizontally to view more content">
-            <i class="bi bi-arrows-expand"></i> Scroll Horizontally
+            <i class="bi bi-arrow-left-right"></i> Scroll Horizontally
         </span>
         <div class="card-body table-responsive">
-            <table id="users-table" class="table table-striped text-nowrap" style="width:100%">
+            <table id="users-table" class="table text-nowrap" style="width:100%">
                 <thead>
                     <tr>
-                        <th>Profile</th>
-                        <th>Name</th>
-                        <th>Role</th>
-                        <th>Password</th>
+                        <th scope="col" class="text-center">Profile</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Role</th>
+                        <th scope="col">Password</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($row as $key => $user) { ?>
-                        <tr class="align-items-center">
-                            <td>
-                                <a href="#" class="logo">
-                                    <img src="assets/img/logo.jpg" style="width: 40px;" alt="">
+                        <tr>
+                            <th scope="row" class="text-center">
+                                <a href="#">
+                                    <img src="assets/img/user.png" class="rounded-circle" style="width: 60px;" alt="Profile Picture">
                                     <span class="avatar-badge idle" title="idle"></span>
                                 </a>
-                            </td>
+                            </th>
                             <td>
-                                <h6 class="">
+                                <h6 class="fw-semibold">
                                     <a href="#"><?php echo $user['name']; ?></a> <small class="text-muted">@<?php echo $user['username']; ?></small>
                                 </h6>
-                                <h6 class="card-subtitle text-muted">Social Worker</h6>
+                                <h6 class="card-subtitle text-lowercase fst-italic fw-light"><?php echo $user['email']; ?></h6>
                             </td>
                             <?php
-                            echo '<td><a href="#" name="status" class="btn badge rounded-pill ' . ($user['type'] === 0 ? 'btn-primary' : 'btn-secondary') . ' user-type" data-id="' . $user['id'] . '" data-type="' . ($user['type'] === 0 ? 1 : 0) . '" data-name="' . ($user['type'] === 0 ? 'Admin' : 'Normal User') . '">' . ($user['type'] === 0 ? 'Admin' : 'User') . '</a></td>';
-                            ?>
-                            <td><a href="#" class="btn btn-sm btn-secondary reset" data-id="1" data-name="Reset" data-type="1">Reset</a></td>
+                            if ($user['type'] === 0) {
+                                echo '<td><a href="#" name="type" class="btn badge rounded-pill btn-primary user-type" data-id="' . $user['id'] . '" data-type="1" data-name="Normal user">Admin</a></td>';
+                            } else {
+                                echo '<td><a href="#" name="type" class="btn badge rounded-pill btn-secondary user-type" data-id="' . $user['id'] . '" data-type="0" data-name="Admin">User</a></td>';
+                            } ?>
+                            <td><a href="#" class="btn btn-sm btn-secondary reset" data-id="<?php echo $user['id']; ?>" data-name="Reset">Reset</a></td>
                         </tr>
                     <?php } ?>
                 </tbody>

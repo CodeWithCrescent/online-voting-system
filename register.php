@@ -43,7 +43,7 @@ include 'includes/head.php'
 
                   <form class="row g-3" novalidate id="register-form">
                     <div class="col-12">
-                      <label for="name" class="form-label">Your Name</label>
+                      <label for="name" class="form-label">Full Name</label>
                       <input type="text" name="name" class="form-control" id="name" required>
                       <div id="name-error-msg" class="invalid-feedback">Please, enter your name!</div>
                     </div>

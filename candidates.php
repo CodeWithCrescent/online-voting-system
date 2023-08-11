@@ -1,5 +1,6 @@
 <?php
 include 'config/dbconnection.php';
+include 'config/session.php';
 
 if (isset($_GET['election_id']) && is_numeric($_GET['election_id'])) {
     $election_id = $_GET['election_id'];
@@ -37,7 +38,7 @@ $row = $result->fetch_assoc();
 </div><!-- End Page Title -->
 
 <section class="section dashboard">
-    <div class="card info-card contenstant-card">
+    <div class="card info-card candidates-card">
         <div class="card-header d-flex align-items-center justify-content-between">
             <h5 class="card-title m-0">Candidates</h5>
             <a href="#" class="btn btn-primary btn-sm add-candidate" data-bs-toggle="modal" data-bs-target="#addCandidate" data-id="<?php echo $election_id; ?>">Add New</a>
@@ -196,6 +197,5 @@ $row = $result->fetch_assoc();
         </div>
         <!-- End Edit Category Modal Dialog -->
 
-    </div>
     </div>
 </section>

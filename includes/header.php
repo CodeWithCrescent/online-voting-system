@@ -1,4 +1,14 @@
   <!-- ======= Header ======= -->
+  <?php
+  include 'config/dbconnection.php';
+  include 'config/session.php';
+
+  $userId = $_SESSION['login_id'];
+  $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
+  $stmt->bind_param('i', $userId);
+  $stmt->execute();
+  $row = $stmt->get_result()->fetch_assoc();
+  ?>
   <header id="header" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between">
@@ -87,26 +97,26 @@
 
         </li><!-- End Notification Nav -->
 
-        
+
 
         <li class="nav-item dropdown pe-3">
 
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-            <!-- <img src="assets/img/profile-img.jpg" alt="Profile" class="rounded-circle"> -->
-            <span class="d-none d-md-block dropdown-toggle ps-2"><?php echo $_SESSION['login_name'] ?></span>
+            <img src="assets/img/user.png" alt="Profile" class="rounded-circle">
+            <span class="d-none d-md-block dropdown-toggle ps-2"><?php echo $row['name'] ?></span>
           </a><!-- End Profile Iamge Icon -->
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
             <li class="dropdown-header">
               <h6><?php echo $_SESSION['login_name'] ?></h6>
-              <span>Web Designer</span>
+              <span>Computer Eng.</span>
             </li>
             <li>
               <hr class="dropdown-divider">
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="#">
+              <a class="dropdown-item d-flex align-items-center" href="index.php?page=profile">
                 <i class="bi bi-person"></i>
                 <span>My Profile</span>
               </a>
@@ -116,7 +126,7 @@
             </li>
 
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="#">
+              <a class="dropdown-item d-flex align-items-center" href="index.php?page=contact">
                 <i class="bi bi-question-circle"></i>
                 <span>Need Help?</span>
               </a>

@@ -23,7 +23,7 @@
             <span>Categories</span>
           </a>
         </li><!-- End Categories Page Nav -->
-        
+
         <li class="nav-item">
           <a class="nav-link<?php echo isset($_GET['page']) && $_GET['page'] === 'users' ? '' : ' collapsed'; ?>" href="index.php?page=users">
             <i class="bi bi-people"></i>
@@ -32,22 +32,18 @@
         </li><!-- End Users Page Nav -->
 
         <li class="nav-item">
-          <a class="nav-link<?php echo isset($_GET['page']) && $_GET['page'] === 'vote' ? '' : ' collapsed'; ?>" href="index.php?page=vote">
+          <a class="nav-link<?php echo isset($_GET['page']) && $_GET['page'] === 'vote' || $_GET['page'] === 'vote_details' ? '' : ' collapsed'; ?>" href="index.php?page=vote">
             <i class="bi bi-box2"></i>
             <span>Vote</span>
           </a>
         </li><!-- End Vote Page Nav -->
-
-        <li class="nav-item">
-          <a class="nav-link<?php echo isset($_GET['page']) && $_GET['page'] === 'results' ? '' : ' collapsed'; ?>" href="index.php?page=results">
-            <i class="bi bi-receipt"></i>
-            <span>Results</span>
-          </a>
-        </li><!-- End Results Page Nav -->
-
-        <li class="nav-heading">User Pages</li>
-
       <?php } ?>
+      <li class="nav-item">
+        <a class="nav-link<?php echo isset($_GET['page']) && $_GET['page'] === 'results' ? '' : ' collapsed'; ?>" href="index.php?page=results">
+          <i class="bi bi-receipt"></i>
+          <span>Results</span>
+        </a>
+      </li><!-- End Results Page Nav -->
 
       <li class="nav-item">
         <a class="nav-link<?php echo isset($_GET['page']) && $_GET['page'] === 'profile' ? '' : ' collapsed'; ?>" href="index.php?page=profile">
@@ -55,13 +51,6 @@
           <span>Profile</span>
         </a>
       </li><!-- End Profile Page Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link<?php echo isset($_GET['page']) && $_GET['page'] === 'contact' ? '' : ' collapsed'; ?>" href="index.php?page=contact">
-          <i class="bi bi-envelope"></i>
-          <span>Contact</span>
-        </a>
-      </li><!-- End Contact Page Nav -->
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="controllers/app.php?action=logout">

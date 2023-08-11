@@ -6,22 +6,38 @@ include 'classes.php';
 $auth = new Auth();
 $admin = new Admin();
 
+// ***** AUTHENTICATIONS OF USERS ******* //
 if ($action == 'register') {
 	$register = $auth->register();
 	if ($register)
 		echo $register;
 }
+
 if ($action == 'login') {
 	$login = $auth->login();
 	if ($login)
 		echo $login;
 }
+
 if ($action == 'logout') {
 	$logout = $auth->logout();
 	if ($logout)
 		echo $logout;
 }
 
+if ($action == 'change_password') {
+	$changePwd = $auth->change_password();
+	if ($changePwd)
+		echo $changePwd;
+}
+
+if ($action == 'reset_password') {
+	$changePwd = $auth->reset_password();
+	if ($changePwd)
+		echo $changePwd;
+}
+
+// ******* ADMIN ACTIONS ********* //
 if ($action == 'add_election') {
 	$save = $admin->add_election();
 	if ($save)
@@ -82,8 +98,21 @@ if ($action == 'delete_candidate') {
 		echo $save;
 }
 
+if ($action == 'user_type') {
+	$save = $admin->user_type();
+	if ($save)
+		echo $save;
+}
+
+// ******* VOTERS ************* //
 if ($action == 'vote') {
 	$save = $admin->vote();
+	if ($save)
+		echo $save;
+}
+
+if ($action == 'update_profile') {
+	$save = $admin->update_profile();
 	if ($save)
 		echo $save;
 }

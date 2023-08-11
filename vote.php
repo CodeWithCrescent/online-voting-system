@@ -1,12 +1,7 @@
 <?php
 include 'config/dbconnection.php';
+include 'config/session.php';
 
-// if (isset($_GET['election_id']) && is_numeric($_GET['election_id'])) {
-$election_id = 18;
-// } else {
-//     echo '<script>window.history.back();</script>';
-//     exit;
-// }
 $status = 1;
 $query = $conn->prepare("SELECT * FROM election WHERE status = ?");
 $query->bind_param('i', $status);
@@ -15,6 +10,17 @@ $temp = $query->get_result();
 $show_results = $temp->fetch_assoc();
 
 if ($show_results) {
+  $check_election = $show_results['id'];
+
+  // Check if user has already voted
+  $user_id = $_SESSION['login_id'];
+  $sql = "SELECT * FROM votes WHERE voter_id = '$user_id' AND election_id = '$check_election'";
+  $result = mysqli_query($conn, $sql);
+
+  if (mysqli_num_rows($result) > 0) {
+    echo "<script> location.href = 'index.php?page=vote_details' </script>";
+    exit();
+  }
 
   $stmt = $conn->prepare("
     SELECT c.*, cat.name AS category_name, e.title AS election_name, e.id AS election_id, e.created_at AS end_time
@@ -32,7 +38,6 @@ if ($show_results) {
     $election_title = $row['election_name'];
     $election_id = $row['election_id'];
     $end_time = $row['end_time'];
-
 ?>
 
     <div class="pagetitle">
@@ -179,9 +184,14 @@ if ($show_results) {
       </nav>
     </div><!-- End Page Title -->
 
-    <p class="text-center p-5">
-      No Candidates added, Try to come back later.
-    </p>
+    <!-- .No Candidates added -->
+    <section class="section error-404 d-flex flex-column align-items-center justify-content-center">
+      <img src="assets/img/img-2.svg" class="img-fluid py-5" alt="No active election!" style="max-width: 320px">
+      <h2>No candidates added, Try to come back later.</h2>
+      <a class="btn" href="controllers/app.php?action=logout">Logout</a>
+    </section>
+
+    </div><!-- /.No Candidates added -->
   <?php }
 } else { ?>
   <div class="container">

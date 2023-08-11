@@ -14,6 +14,7 @@
 <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script> -->
 <script src="assets/vendor/datatables/dataTables.js"></script>
 <script src="assets/vendor/datatables/bootstrap5.min.js"></script>
+<script src="assets/vendor/easy-pie-chart/jquery.easypiechart.min.js"></script>
 
 <!-- For Date Time Picker -->
 <script src="assets/vendor/bootstrap/js/moment.min.js"></script>
@@ -121,6 +122,76 @@
     loginForm.classList.add('was-validated');
   }, false);
 </script>
+
+<script>
+  // jQuery AJAX form submission
+  $(document).on('submit', '#change-password-form', function(e) {
+    e.preventDefault();
+
+    var formData = $(this).serialize();
+
+    $.ajax({
+      type: 'POST',
+      url: 'controllers/app.php?action=change_password',
+      data: formData,
+      dataType: 'json',
+      success: function(response) {
+        console.log(response);
+        if (response.status === 'success') {
+          toastr.success(response.message);
+          $('#change-password-form')[0].reset();
+          setTimeout(function() {
+            location.reload();
+          }, 1000);
+        } else if (response.status === 'error') {
+          $('#change-password-form').prepend('<div class="alert alert-danger">' + response.message + '</div>');
+        } else {
+          $('#change-password-form').prepend('<div class="alert alert-danger">Unknown error occurred.</div>');
+        }
+      },
+      error: function(xhr, status, error) {
+        // Handle AJAX errors, if any
+        console.error(error);
+        $('#change-password-form').prepend('<div class="alert alert-danger">An error occurred during the request.</div>');
+      }
+    });
+  });
+</script>
+
+<script>
+  $(document).ready(function() {
+    $(".reset").click(function(e) {
+      e.preventDefault();
+
+      var userId = $(this).data("id");
+      var actionName = $(this).data("name");
+
+      var confirmReset = confirm("Are you sure you want to " + actionName + " this user's password?");
+
+      if (confirmReset) {
+        $.ajax({
+          type: 'POST',
+          url: 'controllers/app.php?action=reset_password',
+          data: {
+            user_id: userId
+          },
+          dataType: 'json',
+          success: function(response) {
+            if (response.status === "success") {
+              toastr.success(response.message);
+            } else {
+              toastr.error(response.message);
+            }
+          },
+          error: function() {
+            toastr.error("An error occurred while processing the request.");
+          }
+        });
+      }
+    });
+  });
+</script>
+
 
 <script>
   $('#add-election-form').submit(function(e) {
@@ -766,8 +837,10 @@
       success: function(response) {
         console.log(response);
         if (response.status === 'success') {
-          // location.href = response.redirect_url;
-          $('#vote-form').prepend('<div class="alert alert-success">' + response.message + '</div>');
+          toastr.success(response.message);
+          setTimeout(function() {
+            location.reload();
+          }, 1000);
           $('#vote-form')[0].reset();
         } else if (response.status === 'error') {
           $('#vote-form').prepend('<div class="alert alert-danger">' + response.message + '</div>');
@@ -808,28 +881,33 @@
 <!-- USER -->
 <script>
   new DataTable('#users-table', {
-    info: false,
-    "order": [[2, "asc"]]
-});
+    "info": false,
+    "responsive": true,
+    "lengthChange": false,
+    "order": [
+      [2, "asc"]
+    ],
+    "buttons": ["excel", "pdf", "print"]
+  }).buttons().container().appendTo('.card .card-header:eq(0)');
 </script>
 
 <script>
-  $(document).on('click', '.reset', function(e) {
+  $(document).on('click', '.user-type', function(e) {
     e.preventDefault();
 
-    var candidateId = $(this).data('id');
+    var userId = $(this).data('id');
     var type = $(this).data('type');
     var roleName = $(this).data('name');
 
-    var confirmed = confirm('Are you sure you want to make this candidate as ' + statusName + '?');
+    var confirmed = confirm('Are you sure you want to make this candidate as ' + roleName + '?');
 
     // If the user confirms, proceed with change candidate status
     if (confirmed) {
       $.ajax({
         type: 'POST',
-        url: 'controllers/app.php?action=candidate_status',
+        url: 'controllers/app.php?action=user_type',
         data: {
-          candidate_id: candidateId,
+          user_id: userId,
           type: type
         },
         dataType: 'json',
@@ -853,7 +931,43 @@
       });
     } else {
       // User canceled to change status
-      toastr.info('Status change canceled.');
+      toastr.info('User type change canceled.');
     }
+  });
+</script>
+
+<!-- *********** PROFILE ************ -->
+<script>
+  // jQuery AJAX form submission
+  $(document).on('submit', '#edit-profile', function(e) {
+    e.preventDefault();
+
+    var formData = $(this).serialize();
+
+    $.ajax({
+      type: 'POST',
+      url: 'controllers/app.php?action=update_profile',
+      data: formData,
+      dataType: 'json',
+      success: function(response) {
+        console.log(response);
+        if (response.status === 'success') {
+          // location.href = response.redirect_url;
+          toastr.success(response.message);
+          setTimeout(function() {
+            location.reload();
+          }, 1000);
+        } else if (response.status === 'error') {
+          $('#edit-profile').prepend('<div class="alert alert-danger">' + response.message + '</div>');
+        } else {
+          $('#edit-profile').prepend('<div class="alert alert-danger">Unknown error occurred.</div>');
+        }
+      },
+      error: function(xhr, status, error) {
+        // Handle AJAX errors, if any
+        console.error(error);
+        $('#edit-profile').prepend('<div class="alert alert-danger">An error occurred during the request.</div>');
+      }
+    });
   });
 </script>

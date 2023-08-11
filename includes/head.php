@@ -27,7 +27,7 @@
   <link href="assets/vendor/datatables/dataTables.bootstrap5.min.css" rel="stylesheet">
 
   <!-- Template Main CSS File -->
-  <link href="assets/css/style.css" type="text/css" rel="stylesheet">
+  <link href="assets/css/stylee.css" type="text/css" rel="stylesheet">
 
   <!-- Custm Pre-loaded JS -->
   <script src="assets/js/custom.js" defer></script>
