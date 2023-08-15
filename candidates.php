@@ -73,16 +73,31 @@ $row = $result->fetch_assoc();
                                 <?php foreach ($category['candidates'] as $value) { ?>
                                     <td class="border-end d-flex justify-content-center px-3">
                                         <div class="row pt-3 pb-2">
+                                        <?php if ($value['candidate_photo']) { ?>
+                                            <div class="col-6 d-flex flex-column align-items-center justify-content-center">
+                                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                                    <img class="card-icon rounded-circle" src="assets/img/profile/<?php echo $value['candidate_photo']; ?>" alt="Candidate Photo">
+                                                </div>
+                                            </div>
+                                        <?php } else { ?>
                                             <div class="col-6 d-flex flex-column align-items-center justify-content-center">
                                                 <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                                     <i class="bi bi-person"></i>
                                                 </div>
                                             </div>
+                                        <?php } if ($value['fellow_candidate_photo']) { ?>
+                                            <div class="col-6 d-flex flex-column align-items-center justify-content-center">
+                                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                                    <img class="card-icon rounded-circle" src="assets/img/profile/<?php echo $value['fellow_candidate_photo']; ?>" alt="Candidate Photo">
+                                                </div>
+                                            </div>
+                                        <?php } else { ?>
                                             <div class="col-6 d-flex flex-column align-items-center justify-content-center">
                                                 <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                                     <i class="bi bi-person"></i>
                                                 </div>
                                             </div>
+                                        <?php } ?>
                                             <span class="small small-text pt-2 text-nowrap text-center fw-bold"><?php echo $value['name']; ?><br>&<br><?php echo $value['fellow_candidate_name']; ?></span>
                                             <div class="btn-group pt-2">
                                                 <button type="button" class="btn btn-primary btn-sm edit-candidate" data-bs-toggle="modal" data-bs-target="#editCandidate" data-id="<?php echo $value['id']; ?>" data-name="<?php echo $value['name']; ?>"><i class="bx bx-pencil"></i></button>
@@ -127,11 +142,19 @@ $row = $result->fetch_assoc();
         ?>
                 <td class="border-end d-flex justify-content-center px-3">
                     <div class="pt-3 pb-2 row">
+                    <?php if ($value['candidate_photo']) { ?>
+                        <div class="d-flex flex-column align-items-center justify-content-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                <img class="card-icon rounded-circle" src="assets/img/profile/<?php echo $value['candidate_photo']; ?>" alt="Candidate Photo">
+                            </div>
+                        </div>
+                    <?php } else { ?>
                         <div class="d-flex flex-column align-items-center justify-content-center">
                             <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                 <i class="bi bi-person"></i>
                             </div>
                         </div>
+                    <?php } ?>
                         <span class="small small-text pt-2 text-nowrap text-center fw-bold"><?php echo $value['name']; ?></span>
                         <div class="btn-group pt-2">
                             <button type="button" class="btn btn-primary btn-sm edit-candidate" data-bs-toggle="modal" data-bs-target="#editCandidate" data-id="<?php echo $value['id']; ?>" data-name="<?php echo $value['name']; ?>"><i class="bx bx-pencil"></i></button>

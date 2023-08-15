@@ -11,15 +11,15 @@ $show_results = $temp->fetch_assoc();
 
 if ($show_results) {
     $check_election = $show_results['id'];
-  
+
     // Check if user has already voted
     $user_id = $_SESSION['login_id'];
     $sqlz = "SELECT * FROM votes WHERE voter_id = '$user_id' AND election_id = '$check_election'";
     $resultz = mysqli_query($conn, $sqlz);
-  
+
     if (mysqli_num_rows($resultz) == 0) {
-      echo "<script> location.href = 'index.php?page=vote' </script>";
-      exit();
+        echo "<script> location.href = 'index.php?page=vote' </script>";
+        exit();
     }
 
     $stmt = $conn->prepare("
@@ -78,18 +78,36 @@ if ($show_results) {
                                     foreach ($categoryCandidates as $key => $candidate) {
                                     ?>
                                         <div class="d-flex align-items-center row pt-3 pb-2"> <!-- test-x -->
-                                            <div class="col-6 d-flex flex-column align-items-center justify-content-center">
-                                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                                    <i class="bi bi-person"></i>
+                                            <?php if ($candidate['candidate_photo']) { ?>
+                                                <div class="col-6 d-flex flex-column align-items-center justify-content-center">
+                                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                                        <img class="card-icon rounded-circle" src="assets/img/profile/<?php echo $candidate['candidate_photo']; ?>" alt="Candidate Photo">
+                                                    </div>
+                                                    <span class="d-flex small small-text pt-2 text-nowrap text-sm-start text-md-center fw-bold"><?php echo $candidate['name']; ?></span>
                                                 </div>
-                                                <span class="d-flex small small-text pt-2 text-nowrap text-sm-start text-md-center fw-bold"><?php echo $candidate['name']; ?></span>
-                                            </div>
-                                            <div class="col-6 d-flex flex-column align-items-center justify-content-center">
-                                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                                    <i class="bi bi-person"></i>
+                                            <?php } else { ?>
+                                                <div class="col-6 d-flex flex-column align-items-center justify-content-center">
+                                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                                        <i class="bi bi-person"></i>
+                                                    </div>
+                                                    <span class="d-flex small small-text pt-2 text-nowrap text-sm-start text-md-center fw-bold"><?php echo $candidate['name']; ?></span>
                                                 </div>
-                                                <span class="d-flex small small-text pt-2 text-nowrap text-sm-start text-md-center fw-bold"><?php echo $candidate['fellow_candidate_name']; ?></span>
-                                            </div>
+                                            <?php }
+                                            if ($candidate['fellow_candidate_photo']) { ?>
+                                                <div class="col-6 d-flex flex-column align-items-center justify-content-center">
+                                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                                        <img class="card-icon rounded-circle" src="assets/img/profile/<?php echo $candidate['fellow_candidate_photo']; ?>" alt="Candidate Photo">
+                                                    </div>
+                                                    <span class="d-flex small small-text pt-2 text-nowrap text-sm-start text-md-center fw-bold"><?php echo $candidate['fellow_candidate_name']; ?></span>
+                                                </div>
+                                            <?php } else { ?>
+                                                <div class="col-6 d-flex flex-column align-items-center justify-content-center">
+                                                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                                        <i class="bi bi-person"></i>
+                                                    </div>
+                                                    <span class="d-flex small small-text pt-2 text-nowrap text-sm-start text-md-center fw-bold"><?php echo $candidate['fellow_candidate_name']; ?></span>
+                                                </div>
+                                            <?php } ?>
                                         </div>
                                     <?php
                                     }
@@ -124,10 +142,16 @@ if ($show_results) {
                                     <!-- List of candidates -->
                                     <?php
                                     foreach ($categoryCandidates as $key => $out) {
-                                    ?>
-                                        <div class="col-6 card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                            <i class="bi bi-person"></i>
-                                        </div>
+
+                                        if ($out['candidate_photo']) { ?>
+                                            <div class="col-6 card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                                <img class="card-icon rounded-circle" src="assets/img/profile/<?php echo $out['candidate_photo']; ?>" alt="Candidate Photo">
+                                            </div>
+                                        <?php } else { ?>
+                                            <div class="col-6 card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                                <i class="bi bi-person"></i>
+                                            </div>
+                                        <?php } ?>
 
                                         <div class="col-6 ms-2 me-auto">
                                             <div class="pt-2 text-nowrap text-center fw-bold"><?php echo $out['name']; ?></div>

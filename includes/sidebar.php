@@ -12,17 +12,24 @@
 
       <?php if ($_SESSION['login_type'] == 0) { ?>
         <li class="nav-item">
-          <a class="nav-link<?php echo isset($_GET['page']) && ($_GET['page'] === 'election_config' || $_GET['page'] === 'candidates') ? '' : ' collapsed'; ?>" href="index.php?page=election_config">
+          <a class="nav-link<?php echo isset($_GET['page']) && ($_GET['page'] === 'election_config' || $_GET['page'] === 'candidates' || $_GET['page'] === 'categories') ? '' : ' collapsed'; ?>" data-bs-target="#config-nav" data-bs-toggle="collapse" href="#">
             <i class="bi bi-gear"></i>
             <span>Configuration</span>
+            <i class="bi bi-chevron-down ms-auto"></i>
           </a>
+          <ul id="config-nav" class="nav-content collapse<?php echo isset($_GET['page']) && ($_GET['page'] === 'election_config' || $_GET['page'] === 'candidates' || $_GET['page'] === 'categories') ? ' show' : ''; ?>" data-bs-parent="#sidebar-nav">
+            <li>
+              <a href="index.php?page=election_config" class="<?php echo isset($_GET['page']) && ($_GET['page'] === 'election_config' || $_GET['page'] === 'candidates') ? ' active' : ''; ?>">
+                <i class="bi bi-circle"></i><span>Elections</span>
+              </a>
+            </li>
+            <li>
+              <a href="index.php?page=categories" class="<?php echo isset($_GET['page']) && $_GET['page'] === 'categories' ? ' active' : ''; ?>">
+                <i class="bi bi-circle"></i><span>Categories</span>
+              </a>
+            </li>
+          </ul>
         </li><!-- End Configuration Page Nav -->
-        <li class="nav-item">
-          <a class="nav-link<?php echo isset($_GET['page']) && $_GET['page'] === 'categories' ? '' : ' collapsed'; ?>" href="index.php?page=categories">
-            <i class="bi bi-bookmark"></i>
-            <span>Categories</span>
-          </a>
-        </li><!-- End Categories Page Nav -->
 
         <li class="nav-item">
           <a class="nav-link<?php echo isset($_GET['page']) && $_GET['page'] === 'users' ? '' : ' collapsed'; ?>" href="index.php?page=users">
@@ -32,7 +39,7 @@
         </li><!-- End Users Page Nav -->
 
         <li class="nav-item">
-          <a class="nav-link<?php echo isset($_GET['page']) && $_GET['page'] === 'vote' || $_GET['page'] === 'vote_details' ? '' : ' collapsed'; ?>" href="index.php?page=vote">
+          <a class="nav-link<?php echo isset($_GET['page']) && ($_GET['page'] === 'vote' || $_GET['page'] === 'vote_details') ? '' : ' collapsed'; ?>" href="index.php?page=vote">
             <i class="bi bi-box2"></i>
             <span>Vote</span>
           </a>
@@ -44,20 +51,6 @@
           <span>Results</span>
         </a>
       </li><!-- End Results Page Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link<?php echo isset($_GET['page']) && $_GET['page'] === 'profile' ? '' : ' collapsed'; ?>" href="index.php?page=profile">
-          <i class="bi bi-person"></i>
-          <span>Profile</span>
-        </a>
-      </li><!-- End Profile Page Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="controllers/app.php?action=logout">
-          <i class="bi bi-box-arrow-in-right"></i>
-          <span>Logout</span>
-        </a>
-      </li><!-- End Logout Page Nav -->
 
     </ul>
 

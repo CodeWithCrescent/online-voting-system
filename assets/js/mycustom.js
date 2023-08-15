@@ -1,7 +1,7 @@
 // Ensure the DOM is fully loaded
 document.addEventListener("DOMContentLoaded", function () {
   // Set custom date format and time picker
-  const dateFormat = 'dddd, MMMM D';
+  const dateFormat = 'ddd DD-MMM-YYYY';
   const yearFormat = 'YYYY';
   const today = moment().startOf('day');
 
@@ -35,8 +35,8 @@ document.addEventListener("DOMContentLoaded", function () {
   $("#endtime").on("dp.change", function (e) {
     $('#starttime').data("DateTimePicker").maxDate(e.date);
   });
-  
-  $(document).ready(function() {
+
+  $(document).ready(function () {
     $('[data-toggle="tooltip"]').tooltip();
   });
 });

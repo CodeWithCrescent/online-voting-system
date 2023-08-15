@@ -195,42 +195,55 @@
 
 <script>
   $('#add-election-form').submit(function(e) {
-    e.preventDefault()
+    e.preventDefault();
 
     let isValid = true;
     $("#add-election-form").find("input, select, textarea").each(function() {
       const input = $(this);
       const value = input.val().trim();
+
       if (value === "") {
         isValid = false;
-        input.addClass("is-invalid"); // Add a CSS class for invalid inputs
-        input.siblings(".invalid-feedback").text("This field is required."); // Show error message
+        input.addClass("is-invalid");
+        input.siblings(".invalid-feedback").text("This field is required.");
       } else {
-        input.removeClass("is-invalid"); // Remove the CSS class if input is valid
-        input.siblings(".invalid-feedback").text(""); // Clear error message
+        input.removeClass("is-invalid");
+        input.siblings(".invalid-feedback").text("");
       }
     });
 
     if (isValid) {
+      const starttime = $('#starttime').val();
+      const endtime = $('#endtime').val();
+
+      const startTimestamp = moment.utc(starttime).format('YYYY-MM-DD HH:mm').valueOf();
+      const endTimestamp = moment.utc(endtime).format('YYYY-MM-DD HH:mm').valueOf();
 
       $.ajax({
         url: 'controllers/app.php?action=add_election',
         method: 'POST',
-        data: $(this).serialize(),
+        data: {
+          title: $('#title').val(),
+          year: $('#year').val(),
+          voters: $('#voters').val(),
+          starttime: startTimestamp,
+          endtime: endTimestamp,
+          description: $('#description').val()
+        },
         success: function(resp) {
           var response = JSON.parse(resp);
           if (response.status === 'success') {
             location.href = response.redirect_url;
           } else if (resp == 2) {
             $('#add-election-form').prepend('<div class="alert alert-danger">' + resp + '</div>');
-
           } else {
             $('#add-election-form').prepend('<div class="alert alert-danger">' + response.message + '</div>');
           }
         }
-      })
+      });
     }
-  })
+  });
+
   // Real-time validation when the user enters the required field
   $("#add-election-form").find("input, select, textarea").on("input", function() {
     const input = $(this);
@@ -238,11 +251,11 @@
     const errorMessage = input.data("error-message");
 
     if (value === "") {
-      input.addClass("is-invalid"); // Add a CSS class for invalid inputs
-      input.siblings(".invalid-feedback").text(errorMessage); // Show error message
+      input.addClass("is-invalid");
+      input.siblings(".invalid-feedback").text(errorMessage);
     } else {
-      input.removeClass("is-invalid"); // Remove the CSS class if input is valid
-      input.siblings(".invalid-feedback").text(""); // Clear error message
+      input.removeClass("is-invalid");
+      input.siblings(".invalid-feedback").text("");
     }
   });
 </script>
@@ -494,7 +507,7 @@
             '<td>' + (index + 1) + '</td>' +
             '<td>' + category.name + '</td>' +
             '<td class="text-center">' +
-            '<a href="#" class="btn btn-primary btn-sm category-modal" data-bs-toggle="modal" data-bs-target="#editCategory" data-id="' + category.id + '" data-name="' + category.name + '">' +
+            '<a href="#" class="btn btn-primary btn-sm edit-category" data-id="' + category.id + '" data-name="' + category.name + '">' +
             '<i class="bi bi-pencil"></i> Edit' +
             '</a>' +
             '<a href="#" class="btn btn-danger btn-sm category-delete" data-id="' + category.id + '" data-name="' + category.name + '">' +
@@ -858,7 +871,8 @@
 </script>
 
 <script>
-  var endTime = new Date("<?php echo $end_time; ?>");
+  var endTime = new Date("<?php echo $endtime; ?>");
+  var electionId = <?php echo $election_id; ?>;
 
   var countdownInterval = setInterval(function() {
     var now = new Date();
@@ -867,6 +881,35 @@
     if (timeLeft <= 0) {
       clearInterval(countdownInterval);
       document.getElementById("countdown").textContent = "Voting has ended.";
+
+      $.ajax({
+        type: 'POST',
+        url: 'controllers/app.php?action=vote_status',
+        data: {
+          election_id: electionId
+        },
+        dataType: 'json',
+        success: function(response) {
+          console.log(response);
+          if (response.status === 'success') {
+            toastr.success('Voting time has ended.');
+
+            // Check if the current URL is already 'index.php?page=results'
+            if (window.location.href.indexOf('index.php?page=results') === -1) {
+              setTimeout(function() {
+                window.location.href = 'index.php?page=results';
+              }, 2000);
+            }
+          } else {
+            console.error('Error updating election status:', response.message);
+          }
+        },
+        error: function(xhr, status, error) {
+          // Handle AJAX errors, if any
+          console.error(error);
+          console.error('An error occurred during the request.');
+        }
+      });
     } else {
       var days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
       var hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));

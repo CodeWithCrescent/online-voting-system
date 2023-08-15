@@ -7,8 +7,8 @@
   <meta content="" name="keywords">
 
   <!-- Favicons -->
-  <link href="assets/img/favicon.png" rel="icon">
-  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <link href="assets/img/logo.jpg" rel="icon">
+  <link href="assets/img/logo.jpg" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
   <link href="https://fonts.gstatic.com" rel="preconnect">
@@ -27,8 +27,8 @@
   <link href="assets/vendor/datatables/dataTables.bootstrap5.min.css" rel="stylesheet">
 
   <!-- Template Main CSS File -->
-  <link href="assets/css/stylee.css" type="text/css" rel="stylesheet">
+  <link href="assets/css/style.css" type="text/css" rel="stylesheet">
 
   <!-- Custm Pre-loaded JS -->
-  <script src="assets/js/custom.js" defer></script>
+  <script src="assets/js/mycustom.js" defer></script>
 </head>

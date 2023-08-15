@@ -62,6 +62,12 @@ if ($action == 'election_status') {
 		echo $save;
 }
 
+if ($action == 'vote_status') {
+	$save = $admin->vote_status();
+	if ($save)
+		echo $save;
+}
+
 if ($action == 'add_category') {
 	$save = $admin->add_category();
 	if ($save)

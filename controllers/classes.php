@@ -21,7 +21,7 @@ class Auth
 	{
 		// Getting User inputs
 		extract($_POST);
-		$nameField = addslashes($name);
+		$nameField = addslashes(ucwords($name));
 		$usernameField = addslashes($username);
 		$user_type = 1;
 
@@ -227,7 +227,7 @@ class Admin
 	function add_election()
 	{
 		extract($_POST);
-		$added_by = $_SESSION['login_username'];
+		$added_by = $_SESSION['login_id'];
 
 		if (empty($id)) {
 			try {
@@ -321,7 +321,7 @@ class Admin
 				$this->db->autocommit(false); // Start transaction
 
 				// Set all rows' status to 0
-				$resetStatus = $this->db->prepare("UPDATE election SET status = 0");
+				$resetStatus = $this->db->prepare("UPDATE election SET status = 0, can_vote = 0");
 				if (!$resetStatus) {
 					throw new Exception("Failed to prepare the reset query.");
 				}
@@ -331,12 +331,48 @@ class Admin
 				}
 
 				// Set the specified row's status to 1
-				$updateStatus = $this->db->prepare("UPDATE election SET status = $status, updated_by = ? WHERE id = ?");
+				$updateStatus = $this->db->prepare("UPDATE election SET status = $status, can_vote = $status, updated_by = ? WHERE id = ?");
 				if (!$updateStatus) {
 					throw new Exception("Failed to prepare the update query.");
 				}
 
 				$updateStatus->bind_param("si", $updated_by, $election_id);
+
+				if (!$updateStatus->execute()) {
+					throw new Exception("Failed to execute the update query.");
+				}
+
+				$this->db->commit(); // Commit transaction
+
+				echo json_encode(array('status' => 'success', 'message' => 'Status change!'));
+			} catch (Exception $e) {
+				$this->db->rollback(); // Rollback transaction
+				echo json_encode(array('status' => 'error', 'message' => 'Failed to update status of election! Try again later.'));
+			} finally {
+				$this->db->autocommit(true); // Restore autocommit
+			}
+		} else {
+			// ID does not exist
+			echo json_encode(array('status' => 'error', 'message' => 'Failed to update status of election! Contact administrator for help.'));
+		}
+	}
+
+	function vote_status()
+	{
+		extract($_POST);
+		$updated_by = 'Automatic';
+		$status = 0;
+
+		if (!empty($election_id)) {
+			try {
+				$this->db->autocommit(false); // Start transaction
+
+				$updateStatus = $this->db->prepare("UPDATE election SET can_vote = ?, updated_by = ? WHERE id = ?");
+				if (!$updateStatus) {
+					throw new Exception("Failed to prepare the update query.");
+				}
+
+				$updateStatus->bind_param("isi", $status, $updated_by, $election_id);
 
 				if (!$updateStatus->execute()) {
 					throw new Exception("Failed to execute the update query.");
@@ -448,7 +484,7 @@ class Admin
 	function add_candidate()
 	{
 		extract($_POST);
-		$added_by = $_SESSION['login_username'];
+		$added_by = $_SESSION['login_id'];
 
 		if (empty($category) || empty($candidate) || empty($candidate_year)) {
 			echo json_encode(array('status' => 'error', 'message' => 'Please fill in all the required fields.'));
@@ -475,12 +511,55 @@ class Admin
 				return;
 			}
 
-			$save_candidate = $this->db->prepare("INSERT INTO candidates (election_id, category_id, name, candidate_year, fellow_candidate_name, fellow_candidate_year, added_by) VALUES (?, ?, ?, ?, ?, ?, ?)");
+			$candidate_photo_name = '';
+			$fellow_candidate_photo_name = '';
+
+			if (!empty($_FILES['candidate_photo']['name'])) {
+				$candidate_photo = $_FILES['candidate_photo']['name'];
+				$candidate_photo_tmp = $_FILES['candidate_photo']['tmp_name'];
+				$candidate_photo_ext = pathinfo($candidate_photo, PATHINFO_EXTENSION);
+				$allowed_extensions = array('jpg', 'jpeg', 'png');
+
+				if (!in_array(strtolower($candidate_photo_ext), $allowed_extensions)) {
+					echo json_encode(array('status' => 'error', 'message' => 'Invalid Candidate Profile Picture format. Please use JPG, JPEG, or PNG.'));
+					return;
+				}
+
+				$candidate_photo_name = $election . '' . $category . time() . uniqid() . '.' . $candidate_photo_ext;
+				$candidate_photo_path = '../assets/img/profile/' . $candidate_photo_name;
+
+				if (!move_uploaded_file($candidate_photo_tmp, $candidate_photo_path)) {
+					echo json_encode(array('status' => 'error', 'message' => 'Failed to upload Candidate Profile Picture.'));
+					return;
+				}
+			}
+	
+			if (!empty($_FILES['fellow_candidate_photo']['name'])) {
+				$fellow_candidate_photo = $_FILES['fellow_candidate_photo']['name'];
+				$fellow_candidate_photo_tmp = $_FILES['fellow_candidate_photo']['tmp_name'];
+				$fellow_candidate_photo_ext = pathinfo($fellow_candidate_photo, PATHINFO_EXTENSION);
+				$allowed_extensions = array('jpg', 'jpeg', 'png');
+
+				if (!in_array(strtolower($fellow_candidate_photo_ext), $allowed_extensions)) {
+					echo json_encode(array('status' => 'error', 'message' => 'Invalid Fellow Candidate Profile Picture format. Please use JPG, JPEG, or PNG.'));
+					return;
+				}
+
+				$fellow_candidate_photo_name = $election . '' . $category . time() . uniqid() . '.' . $fellow_candidate_photo_ext;
+				$fellow_candidate_photo_path = '../assets/img/profile/' . $fellow_candidate_photo_name;
+
+				if (!move_uploaded_file($fellow_candidate_photo_tmp, $fellow_candidate_photo_path)) {
+					echo json_encode(array('status' => 'error', 'message' => 'Failed to Upload Fellow Candidate Profile Picture.'));
+					return;
+				}
+			}
+
+			$save_candidate = $this->db->prepare("INSERT INTO candidates (election_id, category_id, name, candidate_year, candidate_photo, fellow_candidate_name, fellow_candidate_year, fellow_candidate_photo, added_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			if (!$save_candidate) {
 				throw new Exception("Failed to prepare the query.");
 			}
 
-			$save_candidate->bind_param("iisisis", $election, $category, $candidate, $candidate_year, $fellow_candidate, $fellow_candidate_year, $added_by);
+			$save_candidate->bind_param("iisissisi", $election, $category, $candidate, $candidate_year, $candidate_photo_name, $fellow_candidate, $fellow_candidate_year, $fellow_candidate_photo_name, $added_by);
 
 			if (!$save_candidate->execute()) {
 				throw new Exception("Failed to execute the query.");
@@ -523,12 +602,80 @@ class Admin
 					return;
 				}
 
-				$save_candidate = $this->db->prepare("UPDATE candidates SET category_id = ?, name = ?, candidate_year = ?, fellow_candidate_name = ?, fellow_candidate_year = ?, updated_by = ? WHERE id = ?");
+				$fetchPhotoQuery = $this->db->prepare("SELECT candidate_photo, fellow_candidate_photo FROM candidates WHERE id = ?");
+				if (!$fetchPhotoQuery) {
+					throw new Exception("Failed to prepare the query.");
+				}
+
+				$fetchPhotoQuery->bind_param("i", $candidate_id);
+				if (!$fetchPhotoQuery->execute()) {
+					throw new Exception("Failed to execute the query.");
+				}
+
+				$fetchPhotoQuery->bind_result($candidatePhoto, $fellowCandidatePhoto);
+				$fetchPhotoQuery->fetch();
+				$fetchPhotoQuery->close();
+
+				if (empty($_FILES['candidate_photo']['name'])) {
+				$candidate_photo_name = $candidatePhoto;
+				} 
+				else {
+					$candidate_photo = $_FILES['candidate_photo']['name'];
+					$candidate_photo_tmp = $_FILES['candidate_photo']['tmp_name'];
+					$candidate_photo_ext = pathinfo($candidate_photo, PATHINFO_EXTENSION);
+					$allowed_extensions = array('jpg', 'jpeg', 'png');
+	
+					if (!in_array(strtolower($candidate_photo_ext), $allowed_extensions)) {
+						echo json_encode(array('status' => 'error', 'message' => 'Invalid Candidate Profile Picture format. Please use JPG, JPEG, or PNG.'));
+						return;
+					}
+
+					if (!empty($candidatePhoto)) {
+						unlink('../assets/img/profile/' . $candidatePhoto);
+					}
+	
+					$candidate_photo_name = $election . '' . $category . time() . uniqid() . '.' . $candidate_photo_ext;
+					$candidate_photo_path = '../assets/img/profile/' . $candidate_photo_name;
+	
+					if (!move_uploaded_file($candidate_photo_tmp, $candidate_photo_path)) {
+						echo json_encode(array('status' => 'error', 'message' => 'Failed to upload Candidate Profile Picture.'));
+						return;
+					}
+				}
+
+				if (empty($_FILES['fellow_candidate_photo']['name'])) {
+				$fellow_candidate_photo_name = $fellowCandidatePhoto;
+				} 
+				else {
+					$fellow_candidate_photo = $_FILES['fellow_candidate_photo']['name'];
+					$fellow_candidate_photo_tmp = $_FILES['fellow_candidate_photo']['tmp_name'];
+					$fellow_candidate_photo_ext = pathinfo($fellow_candidate_photo, PATHINFO_EXTENSION);
+					$allowed_extensions = array('jpg', 'jpeg', 'png');
+	
+					if (!in_array(strtolower($fellow_candidate_photo_ext), $allowed_extensions)) {
+						echo json_encode(array('status' => 'error', 'message' => 'Invalid Fellow Candidate Profile Picture format. Please use JPG, JPEG, or PNG.'));
+						return;
+					}
+
+					if (!empty($fellowCandidatePhoto)) {
+						unlink('../assets/img/profile/' . $fellowCandidatePhoto);
+					}
+	
+					$fellow_candidate_photo_name = $election . '' . $category . time() . uniqid() . '.' . $fellow_candidate_photo_ext;
+					$fellow_candidate_photo_path = '../assets/img/profile/' . $fellow_candidate_photo_name;
+	
+					if (!move_uploaded_file($fellow_candidate_photo_tmp, $fellow_candidate_photo_path)) {
+						echo json_encode(array('status' => 'error', 'message' => 'Failed to Upload Fellow Candidate Profile Picture.'));
+						return;
+					}
+				}
+
+				$save_candidate = $this->db->prepare("UPDATE candidates SET category_id = ?, name = ?, candidate_year = ?, candidate_photo = ?, fellow_candidate_name = ?, fellow_candidate_year = ?, fellow_candidate_photo = ?, updated_by = ? WHERE id = ?");
 				if (!$save_candidate) {
 					throw new Exception("Failed to prepare the query.");
 				}
 
-				$save_candidate->bind_param("isisisi", $category, $candidate, $candidate_year, $fellow_candidate, $fellow_candidate_year, $updated_by, $candidate_id);
+				$save_candidate->bind_param("isississi", $category, $candidate, $candidate_year, $candidate_photo_name, $fellow_candidate, $fellow_candidate_year, $fellow_candidate_photo_name, $updated_by, $candidate_id);
 
 
 				if (!$save_candidate->execute()) {
@@ -548,18 +695,41 @@ class Admin
 
 		if (!empty($candidate_id)) {
 			try {
-				$delete = $this->db->prepare("DELETE FROM candidates WHERE id = ?");
-				if (!$delete) {
+
+				$fetchPhotoQuery = $this->db->prepare("SELECT candidate_photo, fellow_candidate_photo FROM candidates WHERE id = ?");
+				if (!$fetchPhotoQuery) {
 					throw new Exception("Failed to prepare the query.");
 				}
 
-				$delete->bind_param("i", $candidate_id);
-
-				if (!$delete->execute()) {
+				$fetchPhotoQuery->bind_param("i", $candidate_id);
+				if (!$fetchPhotoQuery->execute()) {
 					throw new Exception("Failed to execute the query.");
 				}
 
-				if ($delete->affected_rows > 0) {
+				$fetchPhotoQuery->bind_result($candidatePhoto, $fellowCandidatePhoto);
+				$fetchPhotoQuery->fetch();
+				$fetchPhotoQuery->close();
+
+				$deleteQuery = $this->db->prepare("DELETE FROM candidates WHERE id = ?");
+				if (!$deleteQuery) {
+					throw new Exception("Failed to prepare the query.");
+				}
+
+				$deleteQuery->bind_param("i", $candidate_id);
+
+				if (!$deleteQuery->execute()) {
+					throw new Exception("Failed to execute the query.");
+				}
+
+				if ($deleteQuery->affected_rows > 0) {
+					// Delete candidate photos from directory
+					if (!empty($candidatePhoto)) {
+						unlink("../assets/img/profile/" . $candidatePhoto);
+					}
+					if (!empty($fellowCandidatePhoto)) {
+						unlink("../assets/img/profile/" . $fellowCandidatePhoto);
+					}
+
 					echo json_encode(array('status' => 'success', 'message' => 'Successful Deleted'));
 				} else {
 					echo json_encode(array('status' => 'error', 'message' => 'Candidate not found or already deleted.'));
@@ -573,6 +743,7 @@ class Admin
 		}
 	}
 
+
 	function vote()
 	{
 		extract($_POST);
@@ -581,12 +752,12 @@ class Admin
 		if (!empty($selectedCandidates)) {
 			try {
 				// Check if User ID exists in the users table
-				$check_voter_id = $this->db->prepare("SELECT voter_id FROM votes WHERE voter_id = ?");
+				$check_voter_id = $this->db->prepare("SELECT voter_id FROM votes WHERE voter_id = ? AND election_id = ?");
 				if (!$check_voter_id) {
 					throw new Exception("Failed to prepare the query.");
 				}
 
-				$check_voter_id->bind_param("i", $voter_id);
+				$check_voter_id->bind_param("ii", $voter_id, $election_id);
 
 				if (!$check_voter_id->execute()) {
 					throw new Exception("Failed to execute the query.");
@@ -616,9 +787,9 @@ class Admin
 					}
 				}
 
-				echo json_encode(array('status' => 'success', 'message' => 'YOU VOTED'));
+				echo json_encode(array('status' => 'success', 'message' => 'Your vote submitted!'));
 			} catch (Exception $e) {
-				echo json_encode(array('status' => 'error', 'message' => 'Failed to Vote! Try again later.' . $e));
+				echo json_encode(array('status' => 'error', 'message' => 'Failed to Vote! Try again later.'));
 			}
 		} else {
 			// No Candidates Selected

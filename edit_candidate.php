@@ -37,7 +37,23 @@ if (isset($_GET['id'])) {
           <input type="text" name="candidate" value="<?php echo $row['name']; ?>" class="form-control" id="candidate" data-error-message="Candidate name is required" placeholder="Enter Candidate name">
           <div class="invalid-feedback"></div>
         </div>
-        <div class="col-md-12">
+        <div class="col-md-6">
+          <label for="candidate_photo" class="form-label">Candidate Photo</label>
+          <input disabled type="file" class="form-control" id="candidate_photo" name="candidate_photo" data-error-message="Please upload candidate's photo">
+          <?php
+          if ($row['candidate_photo']) {
+            $candidate_photo = $row['candidate_photo'];
+            $candidate_photo_path = 'assets/img/profile/' . $candidate_photo;
+
+            if (file_exists($candidate_photo_path)) {
+              echo '<img src="' . $candidate_photo_path . '" alt="Candidate Photo" class="mt-2" style="max-width: 100px;">';
+            }
+          }
+          ?>
+          <div class="invalid-feedback"></div>
+        </div>
+
+        <div class="col-md-6">
           <label for="candidate_year" class="form-label">Year of Study<span class="text-danger"> *</span></label>
           <select class="form-select" value="<?php echo $row['candidate_year']; ?>" name="candidate_year" id="candidate_year" data-error-message="Select year of study">
             <option value="" hidden>Select Year</option>
@@ -53,7 +69,22 @@ if (isset($_GET['id'])) {
           <input type="text" value="<?php echo $row['fellow_candidate_name']; ?>" name="fellow_candidate" class="form-control" id="fellow_candidate" placeholder="If not, Leave empty">
           <div class="invalid-feedback"></div>
         </div>
-        <div class="col-md-12">
+        <div class="col-md-6">
+          <label for="fellow_candidate_photo" class="form-label">Fellow Candidate Photo</label>
+          <input disabled class="form-control" type="file" id="fellow_candidate_photo" name="fellow_candidate_photo" data-error-message="Please upload candidate's photo" placeholder="">
+          <?php
+          if ($row['fellow_candidate_photo']) {
+            $fellow_candidate_photo = $row['fellow_candidate_photo'];
+            $fellow_candidate_photo_path = 'assets/img/profile/' . $fellow_candidate_photo;
+
+            if (file_exists($fellow_candidate_photo_path)) {
+              echo '<img src="' . $fellow_candidate_photo_path . '" alt="Fellow Candidate Photo" class="mt-2" style="max-width: 100px;">';
+            }
+          }
+          ?>
+          <div class="invalid-feedback"></div>
+        </div>
+        <div class="col-md-6">
           <label for="fellow_candidate_year" class="form-label">Year of Study</label>
           <select class="form-select" value="<?php echo $row['fellow_candidate_year']; ?>" name="fellow_candidate_year" id="fellow_candidate_year">
             <option value="" hidden>Select Year</option>

@@ -8,7 +8,7 @@ $result = $row->get_result();
 ?>
 
 <div class="pagetitle">
-    <h1>Categories</h1>
+    <h1>Categories Configuration</h1>
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="index.php">Home</a></li>
@@ -62,10 +62,10 @@ $result = $row->get_result();
                                   <th scope="row">' . $i++ . '</th>
                                   <td>' . $row['name'] . '</td>
                                   <td class="text-center">
-                                      <a href="#s" class="btn btn-primary btn-sm edit-categor" data-id="' . $row['id'] . '" data-name="' . $row['name'] . '">
+                                      <a href="#" class="btn btn-primary btn-sm edit-category" data-id="' . $row['id'] . '" data-name="' . $row['name'] . '">
                                           <i class="bi bi-pencil"></i> Edit
                                       </a>
-                                      <a href="#" class="btn btn-danger btn-sm category-dellete" data-id="' . $row['id'] . '" data-name="' . $row['name'] . '">
+                                      <a href="#" class="btn btn-danger btn-sm category-delete" data-id="' . $row['id'] . '" data-name="' . $row['name'] . '">
                                           <i class="bi bi-trash"></i> Delete
                                       </a>
                                   </td>

@@ -11,6 +11,7 @@ $show_results = $temp->fetch_assoc();
 
 if ($show_results) {
   $check_election = $show_results['id'];
+  $voting_status = $show_results['can_vote'];
 
   // Check if user has already voted
   $user_id = $_SESSION['login_id'];
@@ -23,13 +24,13 @@ if ($show_results) {
   }
 
   $stmt = $conn->prepare("
-    SELECT c.*, cat.name AS category_name, e.title AS election_name, e.id AS election_id, e.created_at AS end_time
+    SELECT c.*, cat.name AS category_name, e.title AS election_name, e.id AS election_id, e.endtime AS endtime, e.can_vote
     FROM candidates c
     JOIN categories cat ON c.category_id = cat.id
     JOIN election e ON c.election_id = e.id
-    WHERE e.status = ?
+    WHERE e.status = ? AND e.can_vote = ?
 ");
-  $stmt->bind_param('i', $status);
+  $stmt->bind_param('ii', $status, $status);
   $stmt->execute();
   $result = $stmt->get_result();
   $row = $result->fetch_assoc();
@@ -37,7 +38,7 @@ if ($show_results) {
   if ($row) {
     $election_title = $row['election_name'];
     $election_id = $row['election_id'];
-    $end_time = $row['end_time'];
+    $endtime = $row['endtime'];
 ?>
 
     <div class="pagetitle">
@@ -81,18 +82,36 @@ if ($show_results) {
               foreach ($categoryCandidates as $candidate) {
               ?>
                 <div class="d-flex align-items-center row pt-3 pb-2"> <!-- test-x -->
-                  <div class="col-4 d-flex flex-column align-items-center justify-content-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-person"></i>
+                  <?php if ($candidate['candidate_photo']) { ?>
+                    <div class="col-4 d-flex flex-column align-items-center justify-content-center">
+                      <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                        <img class="card-icon rounded-circle" src="assets/img/profile/<?php echo $candidate['candidate_photo']; ?>" alt="Candidate Photo">
+                      </div>
+                      <span class="d-flex small small-text pt-2 text-nowrap text-sm-start text-md-center fw-bold"><?php echo $candidate['name']; ?></span>
                     </div>
-                    <span class="d-flex small small-text pt-2 text-nowrap text-sm-start text-md-center fw-bold"><?php echo $candidate['name']; ?></span>
-                  </div>
-                  <div class="col-4 d-flex flex-column align-items-center justify-content-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-person"></i>
+                  <?php } else { ?>
+                    <div class="col-4 d-flex flex-column align-items-center justify-content-center">
+                      <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                        <i class="bi bi-person"></i>
+                      </div>
+                      <span class="d-flex small small-text pt-2 text-nowrap text-sm-start text-md-center fw-bold"><?php echo $candidate['name']; ?></span>
                     </div>
-                    <span class="d-flex small small-text pt-2 text-nowrap text-sm-start text-md-center fw-bold"><?php echo $candidate['fellow_candidate_name']; ?></span>
-                  </div>
+                  <?php }
+                  if ($candidate['fellow_candidate_photo']) { ?>
+                    <div class="col-4 d-flex flex-column align-items-center justify-content-center">
+                      <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                        <img class="card-icon rounded-circle" src="assets/img/profile/<?php echo $candidate['fellow_candidate_photo']; ?>" alt="Candidate Photo">
+                      </div>
+                      <span class="d-flex small small-text pt-2 text-nowrap text-sm-start text-md-center fw-bold"><?php echo $candidate['fellow_candidate_name']; ?></span>
+                    </div>
+                  <?php } else { ?>
+                    <div class="col-4 d-flex flex-column align-items-center justify-content-center">
+                      <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                        <i class="bi bi-person"></i>
+                      </div>
+                      <span class="d-flex small small-text pt-2 text-nowrap text-sm-start text-md-center fw-bold"><?php echo $candidate['fellow_candidate_name']; ?></span>
+                    </div>
+                  <?php } ?>
                   <div class="ps-3 col-4 d-flex flex-column align-items-center justify-content-center">
                     <label class="vote-check-label card-icon rounded-circle"><input type="radio" class="vote-radio" name="vote-<?php echo strtolower(str_replace(' ', '-', $categoryName)); ?>" data-id="<?php echo $candidate['id']; ?>" data-category="<?php echo $candidate['category_id']; ?>" data-election="<?php echo $election_id; ?>">
                       <div class="checkmark"></div>
@@ -140,11 +159,19 @@ if ($show_results) {
                   ?>
                   <div class="col-6 border-end d-flex justify-content-center" style="height: 100px;">
                     <div class="row pt-3 pb-2">
-                      <div class="col-6 d-flex flex-column align-items-center justify-content-center">
-                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                          <i class="bi bi-person"></i>
+                      <?php if ($out['candidate_photo']) { ?>
+                        <div class="col-6 d-flex flex-column align-items-center justify-content-center">
+                          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                            <img class="card-icon rounded-circle" src="assets/img/profile/<?php echo $out['candidate_photo']; ?>" alt="Candidate Photo">
+                          </div>
                         </div>
-                      </div>
+                      <?php } else { ?>
+                        <div class="col-6 d-flex flex-column align-items-center justify-content-center">
+                          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                            <i class="bi bi-person"></i>
+                          </div>
+                        </div>
+                      <?php } ?>
                       <div class="ps-3 col-6 d-flex flex-column align-items-center justify-content-center">
                         <label class="vote-check-label card-icon rounded-circle"><input type="radio" class="vote-radio" name="vote-<?php echo strtolower(str_replace(' ', '-', $out['category_name'])); ?>" data-id="<?php echo $out['id']; ?>" data-category="<?php echo $out['category_id']; ?>" data-election="<?php echo $election_id; ?>">
                           <div class="checkmark"></div>
@@ -173,26 +200,47 @@ if ($show_results) {
 
       </form><!-- End Contestants Card -->
     </section>
-  <?php } else { ?>
-    <div class="pagetitle">
-      <h1>Online Voting System</h1>
-      <nav>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="index.php">Home</a></li>
-          <li class="breadcrumb-item active">Vote</li>
-        </ol>
-      </nav>
-    </div><!-- End Page Title -->
+    <?php } else {
+    if ($voting_status == 0) { ?>
+      <div class="pagetitle">
+        <h1>Online Voting System</h1>
+        <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+            <li class="breadcrumb-item active">Vote</li>
+          </ol>
+        </nav>
+      </div><!-- End Page Title -->
 
-    <!-- .No Candidates added -->
-    <section class="section error-404 d-flex flex-column align-items-center justify-content-center">
-      <img src="assets/img/img-2.svg" class="img-fluid py-5" alt="No active election!" style="max-width: 320px">
-      <h2>No candidates added, Try to come back later.</h2>
-      <a class="btn" href="controllers/app.php?action=logout">Logout</a>
-    </section>
+      <!-- .Voting time ended -->
+      <section class="section error-404 d-flex flex-column align-items-center justify-content-center">
+        <img src="assets/img/img-2.svg" class="img-fluid py-5" alt="No active election!" style="max-width: 320px">
+        <h2>Sorry, Voting time has ended.</h2>
+        <a class="btn" href="controllers/app.php?action=results">View Results</a>
+      </section>
 
-    </div><!-- /.No Candidates added -->
+      </div><!-- /.Voting time ended -->
+    <?php } else { ?>
+      <div class="pagetitle">
+        <h1>Online Voting System</h1>
+        <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+            <li class="breadcrumb-item active">Vote</li>
+          </ol>
+        </nav>
+      </div><!-- End Page Title -->
+
+      <!-- .No Candidates added -->
+      <section class="section error-404 d-flex flex-column align-items-center justify-content-center">
+        <img src="assets/img/img-2.svg" class="img-fluid py-5" alt="No active election!" style="max-width: 320px">
+        <h2>No candidates added, Try to come back later.</h2>
+        <a class="btn" href="controllers/app.php?action=logout">Logout</a>
+      </section>
+
+      </div><!-- /.No Candidates added -->
   <?php }
+  }
 } else { ?>
   <div class="container">
     <div class="pagetitle">

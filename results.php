@@ -12,7 +12,7 @@ $show_results = $temp->fetch_assoc();
 if ($show_results) {
 
     $stmt = $conn->prepare("
-    SELECT c.*, cat.name AS category_name, e.title AS election_name, e.id AS election_id, e.created_at AS end_time, COUNT(v.id) AS votes_count
+    SELECT c.*, cat.name AS category_name, e.title AS election_name, e.id AS election_id, e.endtime AS endtime, COUNT(v.id) AS votes_count
     FROM candidates c
     JOIN categories cat ON c.category_id = cat.id
     JOIN election e ON c.election_id = e.id
@@ -29,7 +29,7 @@ if ($show_results) {
     if ($row) {
         $election_title = $row['election_name'];
         $election_id = $row['election_id'];
-        $end_time = $row['end_time'];
+        $endtime = $row['endtime'];
 
 ?>
 
@@ -45,7 +45,7 @@ if ($show_results) {
 
         <section class="section dashboard row">
             <!-- Vote Form -->
-            <form id="vote-form" class="col-xxl-4 col-xl-12">
+            <div id="results" class="col-xxl-4 col-xl-12">
 
                 <!-- .Remaining-time-message -->
                 <div class="alert alert-info alert-dismissible fade show" role="alert">
@@ -125,7 +125,17 @@ if ($show_results) {
                 }
                 ?>
 
-            </form><!-- End Vote Form -->
+            </div><!-- End Vote div -->
+            <!-- <button class="btn btn-primary" onclick="printDiv('results')">PRINT RESULTS</button> -->
+            <script type="text/javascript">
+                function printDiv(results) {
+                    var printResults = document.getElementById('results').innerHTML;
+                    w = window.open();
+                    w.document.write(printResults);
+                    w.print();
+                    w.close();
+                }
+            </script>
         </section>
     <?php } else { ?>
         <div class="pagetitle">

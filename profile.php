@@ -28,7 +28,7 @@ $row = $stmt->get_result()->fetch_assoc();
 
           <img src="assets/img/user.png" alt="Profile" class="rounded-circle">
           <h2 class="text-truncate"><?php echo $row['name']; ?></h2>
-          <h3>Computer Eng.</h3>
+          <h3>Student</h3>
         </div>
       </div>
 
@@ -68,11 +68,7 @@ $row = $stmt->get_result()->fetch_assoc();
                 <div class="col-lg-3 col-md-4 label">College</div>
                 <div class="col-lg-9 col-md-8">CoICT</div>
               </div>
-
-              <div class="row">
-                <div class="col-lg-3 col-md-4 label">Course</div>
-                <div class="col-lg-9 col-md-8">Computer Eng.</div>
-              </div>
+              
               <?php if($row['phone']){ ?>
               <div class="row">
                 <div class="col-lg-3 col-md-4 label">Phone</div>

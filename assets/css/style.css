@@ -146,6 +146,26 @@
   
   
   /*--------------------------------------------------------------
+  # Contacts Page
+  --------------------------------------------------------------*/
+  .contact-title {
+    margin-bottom: 10px;
+  }
+
+  .contact-title .contact-img img {
+    max-height: 130px;
+    margin-right: 6px;
+  }
+  
+  .contact-title h1 {
+    font-size: 34px;
+    margin-bottom: 0;
+    font-weight: 500;
+    color: #012970;
+    font-family: "Nunito", sans-serif;
+  }
+  
+  /*--------------------------------------------------------------
   # Page Title
   --------------------------------------------------------------*/
   .pagetitle {
