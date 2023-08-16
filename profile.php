@@ -25,8 +25,17 @@ $row = $stmt->get_result()->fetch_assoc();
 
       <div class="card">
         <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+          <?php
+          if ($row['profile_picture']) {
+            $profile_picture = $row['profile_picture'];
+            $profile_picture_path = 'assets/img/profile/users/' . $profile_picture;
 
-          <img src="assets/img/user.png" alt="Profile" class="rounded-circle">
+            if (file_exists($profile_picture_path)) {
+              echo '<img src="' . $profile_picture_path . '" alt="Profile Picture" class="rounded-circle" style="max-width: 100px;">';
+            }
+          } else { ?>
+            <img src="assets/img/user.png" alt="Profile" class="rounded-circle">
+          <?php } ?>
           <h2 class="text-truncate"><?php echo $row['name']; ?></h2>
           <h3>Student</h3>
         </div>
@@ -68,18 +77,18 @@ $row = $stmt->get_result()->fetch_assoc();
                 <div class="col-lg-3 col-md-4 label">College</div>
                 <div class="col-lg-9 col-md-8">CoICT</div>
               </div>
-              
-              <?php if($row['phone']){ ?>
-              <div class="row">
-                <div class="col-lg-3 col-md-4 label">Phone</div>
-                <div class="col-lg-9 col-md-8"><?php echo $row['phone']; ?></div>
-              </div>
+
+              <?php if ($row['phone']) { ?>
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Phone</div>
+                  <div class="col-lg-9 col-md-8"><?php echo $row['phone']; ?></div>
+                </div>
               <?php }
-              if($row['email']){ ?>
-              <div class="row">
-                <div class="col-lg-3 col-md-4 label">Email</div>
-                <div class="col-lg-9 col-md-8"><?php echo $row['email']; ?></div>
-              </div>
+              if ($row['email']) { ?>
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Email</div>
+                  <div class="col-lg-9 col-md-8"><?php echo $row['email']; ?></div>
+                </div>
               <?php } ?>
 
             </div>
@@ -87,13 +96,26 @@ $row = $stmt->get_result()->fetch_assoc();
             <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
 
               <!-- Profile Edit Form -->
-              <form id="edit-profile">
+              <form id="edit-profile" action="controllers/app.php?action=update_profile" method="post" enctype="multipart/form-data">
                 <div class="row mb-3">
                   <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
                   <div class="col-md-8 col-lg-9">
-                    <img src="assets/img/user.png" alt="Profile">
+                    <?php
+                    if ($row['profile_picture']) {
+                      $profile_picture = $row['profile_picture'];
+                      $profile_picture_path = 'assets/img/profile/users/' . $profile_picture;
+
+                      if (file_exists($profile_picture_path)) {
+                        echo '<img src="' . $profile_picture_path . '" alt="Profile Picture" style="max-width: 100px;">';
+                      }
+                    } else { ?>
+                      <img src="assets/img/user.png" alt="Profile">
+                    <?php } ?>
                     <div class="pt-2">
-                      <a type="file" href="#" class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></a>
+                      <label for="profileImage" class="btn btn-primary btn-sm text-light" title="Upload new profile image">
+                        <input type="file" name="profileImage" id="profileImage" class="visually-hidden" accept="image/*">
+                        <i class="bi bi-upload"></i>
+                      </label>
                       <a href="#" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a>
                     </div>
                   </div>

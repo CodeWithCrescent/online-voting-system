@@ -36,7 +36,7 @@ $result = $stmt->get_result();
     </div>
     <div class="col-md-6">
       <label for="candidate_photo" class="form-label">Candidate Photo</label>
-      <input class="form-control" type="file" id="candidate_photo"  name="candidate_photo" data-error-message="Please upload candidate's photo" placeholder="">
+      <input class="form-control" type="file" accept="image/*" id="candidate_photo"  name="candidate_photo" data-error-message="Please upload candidate's photo" placeholder="">
       <div class="invalid-feedback"></div>
     </div>
     <div class="col-md-6">
@@ -57,7 +57,7 @@ $result = $stmt->get_result();
     </div>
     <div class="col-md-6">
       <label for="fellow_candidate_photo" class="form-label">Fellow Candidate Photo</label>
-      <input class="form-control" type="file" id="fellow_candidate_photo"  name="fellow_candidate_photo" data-error-message="Please upload candidate's photo" placeholder="">
+      <input class="form-control" type="file" accept="image/*" id="fellow_candidate_photo"  name="fellow_candidate_photo" data-error-message="Please upload candidate's photo" placeholder="">
       <div class="invalid-feedback"></div>
     </div>
     <div class="col-md-6">
@@ -105,7 +105,6 @@ $result = $stmt->get_result();
       });
 
       if (isValid) {
-        // Use FormData for handling file uploads
         var formData = new FormData($("#add-candidate-form")[0]);
         $.ajax({
           url: 'controllers/app.php?action=add_candidate',

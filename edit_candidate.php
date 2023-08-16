@@ -43,7 +43,7 @@ if (isset($_GET['id'])) {
           <?php
           if ($row['candidate_photo']) {
             $candidate_photo = $row['candidate_photo'];
-            $candidate_photo_path = 'assets/img/profile/' . $candidate_photo;
+            $candidate_photo_path = 'assets/img/profile/candidate/' . $candidate_photo;
 
             if (file_exists($candidate_photo_path)) {
               echo '<img src="' . $candidate_photo_path . '" alt="Candidate Photo" class="mt-2" style="max-width: 100px;">';
@@ -75,7 +75,7 @@ if (isset($_GET['id'])) {
           <?php
           if ($row['fellow_candidate_photo']) {
             $fellow_candidate_photo = $row['fellow_candidate_photo'];
-            $fellow_candidate_photo_path = 'assets/img/profile/' . $fellow_candidate_photo;
+            $fellow_candidate_photo_path = 'assets/img/profile/candidate/' . $fellow_candidate_photo;
 
             if (file_exists($fellow_candidate_photo_path)) {
               echo '<img src="' . $fellow_candidate_photo_path . '" alt="Fellow Candidate Photo" class="mt-2" style="max-width: 100px;">';

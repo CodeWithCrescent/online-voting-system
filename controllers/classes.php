@@ -526,14 +526,14 @@ class Admin
 				}
 
 				$candidate_photo_name = $election . '' . $category . time() . uniqid() . '.' . $candidate_photo_ext;
-				$candidate_photo_path = '../assets/img/profile/' . $candidate_photo_name;
+				$candidate_photo_path = '../assets/img/profile/candidate/' . $candidate_photo_name;
 
 				if (!move_uploaded_file($candidate_photo_tmp, $candidate_photo_path)) {
 					echo json_encode(array('status' => 'error', 'message' => 'Failed to upload Candidate Profile Picture.'));
 					return;
 				}
 			}
-	
+
 			if (!empty($_FILES['fellow_candidate_photo']['name'])) {
 				$fellow_candidate_photo = $_FILES['fellow_candidate_photo']['name'];
 				$fellow_candidate_photo_tmp = $_FILES['fellow_candidate_photo']['tmp_name'];
@@ -546,7 +546,7 @@ class Admin
 				}
 
 				$fellow_candidate_photo_name = $election . '' . $category . time() . uniqid() . '.' . $fellow_candidate_photo_ext;
-				$fellow_candidate_photo_path = '../assets/img/profile/' . $fellow_candidate_photo_name;
+				$fellow_candidate_photo_path = '../assets/img/profile/candidate/' . $fellow_candidate_photo_name;
 
 				if (!move_uploaded_file($fellow_candidate_photo_tmp, $fellow_candidate_photo_path)) {
 					echo json_encode(array('status' => 'error', 'message' => 'Failed to Upload Fellow Candidate Profile Picture.'));
@@ -574,7 +574,7 @@ class Admin
 	function update_candidate()
 	{
 		extract($_POST);
-		$updated_by = $_SESSION['login_username'];
+		$updated_by = $_SESSION['login_id'];
 
 		if (empty($category) || empty($candidate) || empty($candidate_year)) {
 			echo json_encode(array('status' => 'error', 'message' => 'Please fill in all the required fields.'));
@@ -617,26 +617,25 @@ class Admin
 				$fetchPhotoQuery->close();
 
 				if (empty($_FILES['candidate_photo']['name'])) {
-				$candidate_photo_name = $candidatePhoto;
-				} 
-				else {
+					$candidate_photo_name = $candidatePhoto;
+				} else {
 					$candidate_photo = $_FILES['candidate_photo']['name'];
 					$candidate_photo_tmp = $_FILES['candidate_photo']['tmp_name'];
 					$candidate_photo_ext = pathinfo($candidate_photo, PATHINFO_EXTENSION);
 					$allowed_extensions = array('jpg', 'jpeg', 'png');
-	
+
 					if (!in_array(strtolower($candidate_photo_ext), $allowed_extensions)) {
 						echo json_encode(array('status' => 'error', 'message' => 'Invalid Candidate Profile Picture format. Please use JPG, JPEG, or PNG.'));
 						return;
 					}
 
 					if (!empty($candidatePhoto)) {
-						unlink('../assets/img/profile/' . $candidatePhoto);
+						unlink('../assets/img/profile/candidate/' . $candidatePhoto);
 					}
-	
+
 					$candidate_photo_name = $election . '' . $category . time() . uniqid() . '.' . $candidate_photo_ext;
-					$candidate_photo_path = '../assets/img/profile/' . $candidate_photo_name;
-	
+					$candidate_photo_path = '../assets/img/profile/candidate/' . $candidate_photo_name;
+
 					if (!move_uploaded_file($candidate_photo_tmp, $candidate_photo_path)) {
 						echo json_encode(array('status' => 'error', 'message' => 'Failed to upload Candidate Profile Picture.'));
 						return;
@@ -644,14 +643,13 @@ class Admin
 				}
 
 				if (empty($_FILES['fellow_candidate_photo']['name'])) {
-				$fellow_candidate_photo_name = $fellowCandidatePhoto;
-				} 
-				else {
+					$fellow_candidate_photo_name = $fellowCandidatePhoto;
+				} else {
 					$fellow_candidate_photo = $_FILES['fellow_candidate_photo']['name'];
 					$fellow_candidate_photo_tmp = $_FILES['fellow_candidate_photo']['tmp_name'];
 					$fellow_candidate_photo_ext = pathinfo($fellow_candidate_photo, PATHINFO_EXTENSION);
 					$allowed_extensions = array('jpg', 'jpeg', 'png');
-	
+
 					if (!in_array(strtolower($fellow_candidate_photo_ext), $allowed_extensions)) {
 						echo json_encode(array('status' => 'error', 'message' => 'Invalid Fellow Candidate Profile Picture format. Please use JPG, JPEG, or PNG.'));
 						return;
@@ -660,10 +658,10 @@ class Admin
 					if (!empty($fellowCandidatePhoto)) {
 						unlink('../assets/img/profile/' . $fellowCandidatePhoto);
 					}
-	
+
 					$fellow_candidate_photo_name = $election . '' . $category . time() . uniqid() . '.' . $fellow_candidate_photo_ext;
-					$fellow_candidate_photo_path = '../assets/img/profile/' . $fellow_candidate_photo_name;
-	
+					$fellow_candidate_photo_path = '../assets/img/profile/candidate/' . $fellow_candidate_photo_name;
+
 					if (!move_uploaded_file($fellow_candidate_photo_tmp, $fellow_candidate_photo_path)) {
 						echo json_encode(array('status' => 'error', 'message' => 'Failed to Upload Fellow Candidate Profile Picture.'));
 						return;
@@ -724,10 +722,10 @@ class Admin
 				if ($deleteQuery->affected_rows > 0) {
 					// Delete candidate photos from directory
 					if (!empty($candidatePhoto)) {
-						unlink("../assets/img/profile/" . $candidatePhoto);
+						unlink("../assets/img/profile/candidate/" . $candidatePhoto);
 					}
 					if (!empty($fellowCandidatePhoto)) {
-						unlink("../assets/img/profile/" . $fellowCandidatePhoto);
+						unlink("../assets/img/profile/candidate/" . $fellowCandidatePhoto);
 					}
 
 					echo json_encode(array('status' => 'success', 'message' => 'Successful Deleted'));
@@ -847,13 +845,33 @@ class Admin
 					echo json_encode(array('status' => 'error', 'message' => 'Email already exists. Please use different.'));
 					return;
 				}
+	
+				if (!empty($_FILES['profileImage']['name'])) {
+					$profile_image = $_FILES['profileImage']['name'];
+					$profile_image_tmp = $_FILES['profileImage']['tmp_name'];
+					$profile_image_ext = pathinfo($profile_image, PATHINFO_EXTENSION);
+					$allowed_extensions = array('jpg', 'jpeg', 'png');
+	
+					if (!in_array(strtolower($profile_image_ext), $allowed_extensions)) {
+						echo json_encode(array('status' => 'error', 'message' => 'Invalid Profile Picture format. Please use JPG, JPEG, or PNG.'));
+						return;
+					}
+	
+					$profile_image_name = $username.'-'. time() . uniqid() . '.' . $profile_image_ext;
+					$profile_image_path = '../assets/img/profile/users/' . $profile_image_name;
+	
+					if (!move_uploaded_file($profile_image_tmp, $profile_image_path)) {
+						echo json_encode(array('status' => 'error', 'message' => 'Failed to upload Profile Picture.'));
+						return;
+					}
+				}
 
-				$save_user = $this->db->prepare("UPDATE users SET name = ?, username = ?, email = ?, phone = ? WHERE id = ?");
+				$save_user = $this->db->prepare("UPDATE users SET name = ?, username = ?, email = ?, phone = ?, profile_picture = ? WHERE id = ?");
 				if (!$save_user) {
 					throw new Exception("Failed to prepare the query.");
 				}
 
-				$save_user->bind_param("ssssi", $fullName, $username, $email, $phone, $user);
+				$save_user->bind_param("sssssi", $fullName, $username, $email, $phone, $profile_image_name, $user);
 
 
 				if (!$save_user->execute()) {

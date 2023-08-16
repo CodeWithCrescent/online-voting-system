@@ -96,7 +96,7 @@ if ($show_results) {
                                             if ($candidate['fellow_candidate_photo']) { ?>
                                                 <div class="col-6 d-flex flex-column align-items-center justify-content-center">
                                                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                                        <img class="card-icon rounded-circle" src="assets/img/profile/<?php echo $candidate['fellow_candidate_photo']; ?>" alt="Candidate Photo">
+                                                        <img class="card-icon rounded-circle" src="assets/img/profile/candidate/<?php echo $candidate['fellow_candidate_photo']; ?>" alt="Candidate Photo">
                                                     </div>
                                                     <span class="d-flex small small-text pt-2 text-nowrap text-sm-start text-md-center fw-bold"><?php echo $candidate['fellow_candidate_name']; ?></span>
                                                 </div>
@@ -145,7 +145,7 @@ if ($show_results) {
 
                                         if ($out['candidate_photo']) { ?>
                                             <div class="col-6 card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                                <img class="card-icon rounded-circle" src="assets/img/profile/<?php echo $out['candidate_photo']; ?>" alt="Candidate Photo">
+                                                <img class="card-icon rounded-circle" src="assets/img/profile/candidate/<?php echo $out['candidate_photo']; ?>" alt="Candidate Photo">
                                             </div>
                                         <?php } else { ?>
                                             <div class="col-6 card-icon rounded-circle d-flex align-items-center justify-content-center">

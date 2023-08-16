@@ -76,7 +76,7 @@ $row = $result->fetch_assoc();
                                         <?php if ($value['candidate_photo']) { ?>
                                             <div class="col-6 d-flex flex-column align-items-center justify-content-center">
                                                 <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                                    <img class="card-icon rounded-circle" src="assets/img/profile/<?php echo $value['candidate_photo']; ?>" alt="Candidate Photo">
+                                                    <img class="card-icon rounded-circle" src="assets/img/profile/candidate/<?php echo $value['candidate_photo']; ?>" alt="Candidate Photo">
                                                 </div>
                                             </div>
                                         <?php } else { ?>
@@ -88,7 +88,7 @@ $row = $result->fetch_assoc();
                                         <?php } if ($value['fellow_candidate_photo']) { ?>
                                             <div class="col-6 d-flex flex-column align-items-center justify-content-center">
                                                 <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                                    <img class="card-icon rounded-circle" src="assets/img/profile/<?php echo $value['fellow_candidate_photo']; ?>" alt="Candidate Photo">
+                                                    <img class="card-icon rounded-circle" src="assets/img/profile/candidate/<?php echo $value['fellow_candidate_photo']; ?>" alt="Candidate Photo">
                                                 </div>
                                             </div>
                                         <?php } else { ?>

@@ -23,6 +23,24 @@
 <!-- Template Main JS File -->
 <script src="assets/js/main.js"></script>
 
+<script>
+$(document).ready(function() {
+  // Create a loading overlay
+  var loadingOverlay = $("<div id='loadingOverlay' class='d-flex justify-content-center align-items-center' style='position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.75); z-index: 9999;'><div class='spinner-border text-primary' role='status'><span class='sr-only'>Loading...</span></div></div>");
+  $(document.body).append(loadingOverlay);
+
+  // Show the loading overlay when an AJAX request is sent
+  $(document).on("ajaxStart", function() {
+    loadingOverlay.show();
+  });
+
+  // Hide the loading overlay when the AJAX request is complete
+  $(document).on("ajaxComplete", function() {
+    loadingOverlay.hide();
+  });
+});
+</script>
+
 <!-- Custom Login Form JS -->
 <script>
   function votePresident(selectedCheckbox) {
@@ -870,6 +888,44 @@
   });
 </script>
 
+<!-- *********** PROFILE ************ -->
+<script>
+  // jQuery AJAX form submission
+  $(document).on('submit', '#edit-profile', function(e) {
+    e.preventDefault();
+
+    var formData = new FormData($("#edit-profile")[0]);
+
+    $.ajax({
+      url: 'controllers/app.php?action=update_profile',
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      dataType: 'json',
+      success: function(response) {
+        console.log(response);
+        if (response.status === 'success') {
+          toastr.success(response.message);
+          setTimeout(function() {
+            location.reload();
+          }, 1000);
+        } else if (response.status === 'error') {
+          $('#edit-profile').prepend('<div class="alert alert-danger">' + response.message + '</div>');
+        } else {
+          $('#edit-profile').prepend('<div class="alert alert-danger">Unknown error occurred.</div>');
+        }
+      },
+      error: function(xhr, status, error) {
+        // Handle AJAX errors, if any
+        console.error(error);
+        $('#edit-profile').prepend('<div class="alert alert-danger">An error occurred during the request. ' + xhr.responseText + '</div>');
+      }
+    });
+  });
+</script>
+
+
 <script>
   var endTime = new Date("<?php echo $endtime; ?>");
   var electionId = <?php echo $election_id; ?>;
@@ -976,41 +1032,5 @@
       // User canceled to change status
       toastr.info('User type change canceled.');
     }
-  });
-</script>
-
-<!-- *********** PROFILE ************ -->
-<script>
-  // jQuery AJAX form submission
-  $(document).on('submit', '#edit-profile', function(e) {
-    e.preventDefault();
-
-    var formData = $(this).serialize();
-
-    $.ajax({
-      type: 'POST',
-      url: 'controllers/app.php?action=update_profile',
-      data: formData,
-      dataType: 'json',
-      success: function(response) {
-        console.log(response);
-        if (response.status === 'success') {
-          // location.href = response.redirect_url;
-          toastr.success(response.message);
-          setTimeout(function() {
-            location.reload();
-          }, 1000);
-        } else if (response.status === 'error') {
-          $('#edit-profile').prepend('<div class="alert alert-danger">' + response.message + '</div>');
-        } else {
-          $('#edit-profile').prepend('<div class="alert alert-danger">Unknown error occurred.</div>');
-        }
-      },
-      error: function(xhr, status, error) {
-        // Handle AJAX errors, if any
-        console.error(error);
-        $('#edit-profile').prepend('<div class="alert alert-danger">An error occurred during the request.</div>');
-      }
-    });
   });
 </script>
