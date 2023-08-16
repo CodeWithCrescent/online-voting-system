@@ -24,21 +24,19 @@
 <script src="assets/js/main.js"></script>
 
 <script>
-$(document).ready(function() {
-  // Create a loading overlay
-  var loadingOverlay = $("<div id='loadingOverlay' class='d-flex justify-content-center align-items-center' style='position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.75); z-index: 9999;'><div class='spinner-border text-primary' role='status'><span class='sr-only'>Loading...</span></div></div>");
-  $(document.body).append(loadingOverlay);
+  function showLoadingOverlay() {
+    var loadingOverlay = $("<div id='loadingOverlay' class='d-flex justify-content-center align-items-center' style='position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #ffffff82; z-index: 9999;'>" +
+      "<div class='spinner-border' role='status' style='width: 4rem; height: 4rem; color: #012970;'>" +
+      "<span class='sr-only'>Loading...</span>" +
+      "</div>" +
+      "</div>");
 
-  // Show the loading overlay when an AJAX request is sent
-  $(document).on("ajaxStart", function() {
-    loadingOverlay.show();
-  });
+    $(document.body).append(loadingOverlay);
+  }
 
-  // Hide the loading overlay when the AJAX request is complete
-  $(document).on("ajaxComplete", function() {
-    loadingOverlay.hide();
-  });
-});
+  function hideLoadingOverlay() {
+    $('#loadingOverlay').remove();
+  }
 </script>
 
 <!-- Custom Login Form JS -->
@@ -106,7 +104,7 @@ $(document).ready(function() {
         }
       }
     } else {
-      // If form is valid, proceed with AJAX call to the server
+
       var formData = new FormData(loginForm);
       $.ajax({
         url: 'controllers/app.php?action=login',
@@ -114,6 +112,9 @@ $(document).ready(function() {
         data: formData,
         processData: false,
         contentType: false,
+        beforeSend: function() {
+          showLoadingOverlay();
+        },
         error: function(err) {
           console.log(err);
         },
@@ -122,6 +123,7 @@ $(document).ready(function() {
           if (response.status === 'success') {
             location.href = response.redirect_url;
           } else {
+            hideLoadingOverlay();
             // Show the error message received from the server
             if (response.status === 'username') {
               $('#login-form').prepend('<div class="alert alert-danger">' + response.message + '</div>');
@@ -142,7 +144,6 @@ $(document).ready(function() {
 </script>
 
 <script>
-  // jQuery AJAX form submission
   $(document).on('submit', '#change-password-form', function(e) {
     e.preventDefault();
 
@@ -153,6 +154,9 @@ $(document).ready(function() {
       url: 'controllers/app.php?action=change_password',
       data: formData,
       dataType: 'json',
+      beforeSend: function() {
+        showLoadingOverlay();
+      },
       success: function(response) {
         console.log(response);
         if (response.status === 'success') {
@@ -162,6 +166,7 @@ $(document).ready(function() {
             location.reload();
           }, 1000);
         } else if (response.status === 'error') {
+          hideLoadingOverlay();
           $('#change-password-form').prepend('<div class="alert alert-danger">' + response.message + '</div>');
         } else {
           $('#change-password-form').prepend('<div class="alert alert-danger">Unknown error occurred.</div>');
@@ -175,6 +180,7 @@ $(document).ready(function() {
     });
   });
 </script>
+
 
 <script>
   $(document).ready(function() {
@@ -194,6 +200,12 @@ $(document).ready(function() {
             user_id: userId
           },
           dataType: 'json',
+          beforeSend: function() {
+            showLoadingOverlay();
+          },
+          complete: function() {
+            hideLoadingOverlay();
+          },
           success: function(response) {
             if (response.status === "success") {
               toastr.success(response.message);
@@ -248,13 +260,18 @@ $(document).ready(function() {
           endtime: endTimestamp,
           description: $('#description').val()
         },
+        beforeSend: function() {
+          showLoadingOverlay();
+        },
         success: function(resp) {
           var response = JSON.parse(resp);
           if (response.status === 'success') {
             location.href = response.redirect_url;
           } else if (resp == 2) {
+            hideLoadingOverlay();
             $('#add-election-form').prepend('<div class="alert alert-danger">' + resp + '</div>');
           } else {
+            hideLoadingOverlay();
             $('#add-election-form').prepend('<div class="alert alert-danger">' + response.message + '</div>');
           }
         }
@@ -292,8 +309,12 @@ $(document).ready(function() {
         console.log()
         alert("An error occured")
       },
+      beforeSend: function() {
+        showLoadingOverlay();
+      },
       success: function(resp) {
         if (resp) {
+          hideLoadingOverlay();
           $('#editElection .modal-title').html($title)
           $('#editElection .modal-body').html(resp)
           $('#editElection').modal('show')
@@ -330,19 +351,25 @@ $(document).ready(function() {
         url: 'controllers/app.php?action=update_election',
         data: formData,
         dataType: 'json',
+        beforeSend: function() {
+          showLoadingOverlay();
+        },
         success: function(response) {
           console.log(response);
           if (response.status === 'success') {
             location.href = response.redirect_url;
           } else if (response.status === 'error') {
+            hideLoadingOverlay();
             $('#update-election-form').prepend('<div class="alert alert-danger">' + response.message + '</div>');
           } else {
+            hideLoadingOverlay();
             $('#update-election-form').prepend('<div class="alert alert-danger">Unknown error occurred.</div>');
           }
         },
         error: function(xhr, status, error) {
           // Handle AJAX errors
           console.error(error);
+          hideLoadingOverlay();
           $('#update-election-form').prepend('<div class="alert alert-danger">An error occurred during the request.</div>');
         }
       });
@@ -372,19 +399,21 @@ $(document).ready(function() {
 
 <script>
   window.viewElection = function($title = '', $url = '') {
-    // start_load()
     $.ajax({
       url: $url,
       error: err => {
         console.log()
         alert("An error occured")
       },
+      beforeSend: function() {
+        showLoadingOverlay();
+      },
       success: function(resp) {
         if (resp) {
+          hideLoadingOverlay();
           $('#viewElection .modal-title').html($title)
           $('#viewElection .modal-body').html(resp)
           $('#viewElection').modal('show')
-          // end_load()
         }
       }
     })
@@ -410,6 +439,9 @@ $(document).ready(function() {
           election_id: electionId
         },
         dataType: 'json',
+        beforeSend: function() {
+          showLoadingOverlay();
+        },
         success: function(response) {
           console.log(response);
           if (response.status === 'success') {
@@ -425,6 +457,7 @@ $(document).ready(function() {
         error: function(xhr, status, error) {
           // Handle AJAX errors, if any
           console.error(error);
+          hideLoadingOverlay();
           toastr.error('An error occurred during the request.');
         }
       });
@@ -456,10 +489,12 @@ $(document).ready(function() {
           status: status
         },
         dataType: 'json',
+        beforeSend: function() {
+          showLoadingOverlay();
+        },
         success: function(response) {
           console.log(response);
           if (response.status === 'success') {
-            // location.href = response.redirect_url;
             toastr.success(response.message);
             setTimeout(function() {
               location.reload();
@@ -471,6 +506,7 @@ $(document).ready(function() {
         error: function(xhr, status, error) {
           // Handle AJAX errors, if any
           console.error(error);
+          hideLoadingOverlay();
           toastr.error('An error occurred during the request.');
         }
       });
@@ -495,8 +531,12 @@ $(document).ready(function() {
         console.log()
         alert("An error occured")
       },
+      beforeSend: function() {
+        showLoadingOverlay();
+      },
       success: function(resp) {
         if (resp) {
+          hideLoadingOverlay();
           $('#addCategory .modal-title').html($title)
           $('#addCategory .modal-body').html(resp)
           $('#addCategory').modal('show')
@@ -517,6 +557,12 @@ $(document).ready(function() {
         election_id: electionId
       },
       dataType: 'json',
+      beforeSend: function() {
+        showLoadingOverlay();
+      },
+      complete: function() {
+        hideLoadingOverlay();
+      },
       success: function(data) {
         $('#categoriesTableBody').empty();
 
@@ -600,6 +646,12 @@ $(document).ready(function() {
         console.log()
         alert("An error occured")
       },
+      beforeSend: function() {
+        showLoadingOverlay();
+      },
+      complete: function() {
+        hideLoadingOverlay();
+      },
       success: function(resp) {
         if (resp) {
           $('#editCategory .modal-title').html($title)
@@ -624,19 +676,25 @@ $(document).ready(function() {
       url: 'controllers/app.php?action=update_category',
       data: formData,
       dataType: 'json',
+      beforeSend: function() {
+        showLoadingOverlay();
+      },
       success: function(response) {
         console.log(response);
         if (response.status === 'success') {
           location.href = response.redirect_url;
         } else if (response.status === 'error') {
+          hideLoadingOverlay();
           $('#update-category-form').prepend('<div class="alert alert-danger">' + response.message + '</div>');
         } else {
+          hideLoadingOverlay();
           $('#update-category-form').prepend('<div class="alert alert-danger">Unknown error occurred.</div>');
         }
       },
       error: function(xhr, status, error) {
         // Handle AJAX errors, if any
         console.error(error);
+        hideLoadingOverlay();
         $('#update-category-form').prepend('<div class="alert alert-danger">An error occurred during the request.</div>');
       }
     });
@@ -653,7 +711,6 @@ $(document).ready(function() {
 
     var confirmed = confirm('Are you sure you want to delete ' + categoryName + ' Category?');
 
-    // If the user confirms, to proceed with deletion
     if (confirmed) {
       $.ajax({
         type: 'POST',
@@ -662,10 +719,12 @@ $(document).ready(function() {
           category_id: categoryId
         },
         dataType: 'json',
+        beforeSend: function() {
+          showLoadingOverlay();
+        },
         success: function(response) {
           console.log(response);
           if (response.status === 'success') {
-            // location.href = response.redirect_url;
             toastr.success(response.message);
             setTimeout(function() {
               location.reload();
@@ -677,6 +736,7 @@ $(document).ready(function() {
         error: function(xhr, status, error) {
           // Handle AJAX errors, if any
           console.error(error);
+          hideLoadingOverlay();
           toastr.error('An error occurred during the request.');
         }
       });
@@ -706,19 +766,21 @@ $(document).ready(function() {
   })
 
   window.addCandidate = function($title = '', $url = '') {
-    // start_load()
     $.ajax({
       url: $url,
       error: err => {
         console.log()
         alert("An error occured")
       },
+      beforeSend: function() {
+        showLoadingOverlay();
+      },
       success: function(resp) {
         if (resp) {
+          hideLoadingOverlay();
           $('#addCandidate .modal-title').html($title)
           $('#addCandidate .modal-body').html(resp)
           $('#addCandidate').modal('show')
-          // end_load()
         }
       }
     })
@@ -732,19 +794,21 @@ $(document).ready(function() {
   })
 
   window.editCandidate = function($title = '', $url = '') {
-    // start_load()
     $.ajax({
       url: $url,
       error: err => {
         console.log()
         alert("An error occured")
       },
+      beforeSend: function() {
+        showLoadingOverlay();
+      },
       success: function(resp) {
         if (resp) {
+          hideLoadingOverlay();
           $('#editCandidate .modal-title').html($title)
           $('#editCandidate .modal-body').html(resp)
           $('#editCandidate').modal('show')
-          // end_load()
         }
       }
     })
@@ -763,20 +827,26 @@ $(document).ready(function() {
       url: 'controllers/app.php?action=update_candidate',
       data: formData,
       dataType: 'json',
+      beforeSend: function() {
+        showLoadingOverlay();
+      },
       success: function(response) {
         console.log(response);
         if (response.status === 'success') {
           location.href = response.redirect_url;
-          // $('#update-candidate-form').prepend('<div class="alert alert-danger">' + response.redirect_url + '</div>');
+          // $('#update-candidate-form').prepend('<div class="alert alert-success">' + response.redirect_url + '</div>');
         } else if (response.status === 'error') {
+          hideLoadingOverlay();
           $('#update-candidate-form').prepend('<div class="alert alert-danger">' + response.message + '</div>');
         } else {
+          hideLoadingOverlay();
           $('#update-candidate-form').prepend('<div class="alert alert-danger">Unknown error occurred.</div>');
         }
       },
       error: function(xhr, status, error) {
         // Handle AJAX errors, if any
         console.error(error);
+        hideLoadingOverlay();
         $('#update-candidate-form').prepend('<div class="alert alert-danger">An error occurred during the request.</div>');
       }
     });
@@ -802,6 +872,9 @@ $(document).ready(function() {
           candidate_id: candidateId
         },
         dataType: 'json',
+        beforeSend: function() {
+          showLoadingOverlay();
+        },
         success: function(response) {
           console.log(response);
           if (response.status === 'success') {
@@ -816,6 +889,7 @@ $(document).ready(function() {
         error: function(xhr, status, error) {
           // Handle AJAX errors
           console.error(error);
+          hideLoadingOverlay();
           toastr.error('An error occurred during the request.');
         }
       });
@@ -831,10 +905,9 @@ $(document).ready(function() {
   $(document).on('submit', '#vote-form', function(e) {
     e.preventDefault();
 
-    // Create an array to store the selected radio button data
+    // Create an array to store the selected vote data
     var selectedCandidates = [];
-
-    // Iterate over each selected radio button
+    
     $('.vote-radio:checked').each(function() {
       var candidate_id = $(this).data('id');
       var category_id = $(this).data('category');
@@ -858,13 +931,14 @@ $(document).ready(function() {
       selectedCandidates: selectedCandidates
     };
 
-    // var formData = $(this).serialize();
-
     $.ajax({
       type: 'POST',
       url: 'controllers/app.php?action=vote',
       data: requestData,
       dataType: 'json',
+      beforeSend: function() {
+        showLoadingOverlay();
+      },
       success: function(response) {
         console.log(response);
         if (response.status === 'success') {
@@ -874,14 +948,17 @@ $(document).ready(function() {
           }, 1000);
           $('#vote-form')[0].reset();
         } else if (response.status === 'error') {
+          hideLoadingOverlay();
           $('#vote-form').prepend('<div class="alert alert-danger">' + response.message + '</div>');
         } else {
+          hideLoadingOverlay();
           $('#vote-form').prepend('<div class="alert alert-danger">Unknown error occurred.</div>');
         }
       },
       error: function(xhr, status, error) {
         // Handle AJAX errors, if any
         console.error(error);
+        hideLoadingOverlay();
         $('#vote-form').prepend('<div class="alert alert-danger">An error occurred during the request.</div>');
       }
     });
@@ -903,6 +980,9 @@ $(document).ready(function() {
       processData: false,
       contentType: false,
       dataType: 'json',
+      beforeSend: function() {
+        showLoadingOverlay();
+      },
       success: function(response) {
         console.log(response);
         if (response.status === 'success') {
@@ -911,14 +991,17 @@ $(document).ready(function() {
             location.reload();
           }, 1000);
         } else if (response.status === 'error') {
+          hideLoadingOverlay();
           $('#edit-profile').prepend('<div class="alert alert-danger">' + response.message + '</div>');
         } else {
+          hideLoadingOverlay();
           $('#edit-profile').prepend('<div class="alert alert-danger">Unknown error occurred.</div>');
         }
       },
       error: function(xhr, status, error) {
         // Handle AJAX errors, if any
         console.error(error);
+        hideLoadingOverlay();
         $('#edit-profile').prepend('<div class="alert alert-danger">An error occurred during the request. ' + xhr.responseText + '</div>');
       }
     });
@@ -945,6 +1028,9 @@ $(document).ready(function() {
           election_id: electionId
         },
         dataType: 'json',
+        beforeSend: function() {
+          showLoadingOverlay();
+        },
         success: function(response) {
           console.log(response);
           if (response.status === 'success') {
@@ -957,12 +1043,15 @@ $(document).ready(function() {
               }, 2000);
             }
           } else {
+            hideLoadingOverlay();
             console.error('Error updating election status:', response.message);
           }
         },
         error: function(xhr, status, error) {
           // Handle AJAX errors, if any
           console.error(error);
+          hideLoadingOverlay();
+          f
           console.error('An error occurred during the request.');
         }
       });
@@ -1010,21 +1099,25 @@ $(document).ready(function() {
           type: type
         },
         dataType: 'json',
+        beforeSend: function() {
+          showLoadingOverlay();
+        },
         success: function(response) {
           console.log(response);
           if (response.status === 'success') {
-            // location.href = response.redirect_url;
             toastr.success(response.message);
             setTimeout(function() {
               location.reload();
             }, 1000);
           } else {
+            hideLoadingOverlay();
             toastr.error(response.message);
           }
         },
         error: function(xhr, status, error) {
           // Handle AJAX errors, if any
           console.error(error);
+          hideLoadingOverlay();
           toastr.error('An error occurred during the request.');
         }
       });

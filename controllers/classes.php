@@ -845,25 +845,45 @@ class Admin
 					echo json_encode(array('status' => 'error', 'message' => 'Email already exists. Please use different.'));
 					return;
 				}
-	
+
+				// Fetch the user profile name from db
+				$user_profile_check = $this->db->prepare("SELECT * FROM users WHERE id = ?");
+				if (!$user_profile_check) {
+					throw new Exception("Failed to prepare the query.");
+				}
+				$user_profile_check->bind_param("i", $user);
+
+				if (!$user_profile_check->execute()) {
+					throw new Exception("Failed to execute the query.");
+				}
+				$profile_result = $user_profile_check->get_result()->fetch_assoc();
+
 				if (!empty($_FILES['profileImage']['name'])) {
 					$profile_image = $_FILES['profileImage']['name'];
 					$profile_image_tmp = $_FILES['profileImage']['tmp_name'];
 					$profile_image_ext = pathinfo($profile_image, PATHINFO_EXTENSION);
 					$allowed_extensions = array('jpg', 'jpeg', 'png');
-	
+
 					if (!in_array(strtolower($profile_image_ext), $allowed_extensions)) {
 						echo json_encode(array('status' => 'error', 'message' => 'Invalid Profile Picture format. Please use JPG, JPEG, or PNG.'));
 						return;
 					}
-	
-					$profile_image_name = $username.'-'. time() . uniqid() . '.' . $profile_image_ext;
+
+
+					if ($profile_result['profile_picture']) {
+						$picture_name = $profile_result['profile_picture'];
+						unlink('../assets/img/profile/users/' . $picture_name);
+					}
+
+					$profile_image_name = $username . '-' . time() . uniqid() . '.' . $profile_image_ext;
 					$profile_image_path = '../assets/img/profile/users/' . $profile_image_name;
-	
+
 					if (!move_uploaded_file($profile_image_tmp, $profile_image_path)) {
 						echo json_encode(array('status' => 'error', 'message' => 'Failed to upload Profile Picture.'));
 						return;
 					}
+				} else {
+					$profile_image_name = $profile_result['profile_picture'];
 				}
 
 				$save_user = $this->db->prepare("UPDATE users SET name = ?, username = ?, email = ?, phone = ?, profile_picture = ? WHERE id = ?");

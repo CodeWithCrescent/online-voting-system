@@ -1,13 +1,6 @@
 <?php
 include 'config/dbconnection.php';
 
-// if (isset($_GET['election_id']) && is_numeric($_GET['election_id'])) {
-//     $election_id = $_GET['election_id'];
-// } else {
-//     echo '<script>window.history.back();</script>'; 
-//     exit;
-// }
-
 if (isset($_GET['id'])) {
   $id = $_GET['id'];
 

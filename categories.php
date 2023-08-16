@@ -1,6 +1,7 @@
 <?php
 include 'config/dbconnection.php';
 include 'config/session.php';
+include 'config/isadmin.php';
 
 $row = $conn->prepare("SELECT * FROM election");
 $row->execute();

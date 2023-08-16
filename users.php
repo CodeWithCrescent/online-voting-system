@@ -1,6 +1,7 @@
 <?php
 include 'config/dbconnection.php';
 include 'config/session.php';
+include 'config/isadmin.php';
 
 $users = $conn->prepare("SELECT * FROM users");
 $users->execute();
@@ -40,8 +41,13 @@ $row = $users->get_result();
                         <tr>
                             <th scope="row" class="text-center">
                                 <a href="#">
+                                    <?php if ($user['profile_picture']) { ?>
+                                    <img src="assets/img/profile/users/<?php echo $user['profile_picture']; ?>" class="rounded-circle" style="width: 60px;" alt="Profile Picture">
+                                    <span class="avatar-badge idle" title="idle"></span>
+                                    <?php } else { ?>
                                     <img src="assets/img/user.png" class="rounded-circle" style="width: 60px;" alt="Profile Picture">
                                     <span class="avatar-badge idle" title="idle"></span>
+                                    <?php } ?>
                                 </a>
                             </th>
                             <td>

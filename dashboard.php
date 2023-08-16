@@ -1,5 +1,6 @@
 <?php 
 include 'config/session.php';
+include 'config/isadmin.php';
 ?>
     <div class="pagetitle">
         <h1>Dashboard</h1>

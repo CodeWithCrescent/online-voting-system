@@ -1,6 +1,7 @@
 <?php
 include 'config/dbconnection.php';
 include 'config/session.php';
+include 'config/isadmin.php';
 
 if (isset($_GET['election_id']) && is_numeric($_GET['election_id'])) {
     $election_id = $_GET['election_id'];
@@ -145,7 +146,7 @@ $row = $result->fetch_assoc();
                     <?php if ($value['candidate_photo']) { ?>
                         <div class="d-flex flex-column align-items-center justify-content-center">
                             <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                <img class="card-icon rounded-circle" src="assets/img/profile/<?php echo $value['candidate_photo']; ?>" alt="Candidate Photo">
+                                <img class="card-icon rounded-circle" src="assets/img/profile/candidate/<?php echo $value['candidate_photo']; ?>" alt="Candidate Photo">
                             </div>
                         </div>
                     <?php } else { ?>

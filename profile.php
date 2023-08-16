@@ -96,7 +96,7 @@ $row = $stmt->get_result()->fetch_assoc();
             <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
 
               <!-- Profile Edit Form -->
-              <form id="edit-profile" action="controllers/app.php?action=update_profile" method="post" enctype="multipart/form-data">
+              <form id="edit-profile" enctype="multipart/form-data">
                 <div class="row mb-3">
                   <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
                   <div class="col-md-8 col-lg-9">
@@ -124,7 +124,7 @@ $row = $stmt->get_result()->fetch_assoc();
                 <div class="row mb-3">
                   <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Full Name<span class="text-danger"> *</span></label>
                   <div class="col-md-8 col-lg-9">
-                    <input type="hidden" name="user" value="1">
+                    <input type="hidden" name="user" value="<?php echo $row['id']; ?>">
                     <input name="fullName" type="text" class="form-control" id="fullName" value="<?php echo $row['name']; ?>">
                   </div>
                 </div>

@@ -81,7 +81,7 @@ if ($show_results) {
                                             <?php if ($candidate['candidate_photo']) { ?>
                                                 <div class="col-6 d-flex flex-column align-items-center justify-content-center">
                                                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                                        <img class="card-icon rounded-circle" src="assets/img/profile/<?php echo $candidate['candidate_photo']; ?>" alt="Candidate Photo">
+                                                        <img class="card-icon rounded-circle" src="assets/img/profile/candidate/<?php echo $candidate['candidate_photo']; ?>" alt="Candidate Photo">
                                                     </div>
                                                     <span class="d-flex small small-text pt-2 text-nowrap text-sm-start text-md-center fw-bold"><?php echo $candidate['name']; ?></span>
                                                 </div>
