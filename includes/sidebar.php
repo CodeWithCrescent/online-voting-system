@@ -52,6 +52,13 @@
         </a>
       </li><!-- End Results Page Nav -->
 
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="controllers/app.php?action=logout">
+          <i class="bi bi-box-arrow-in-right"></i>
+          <span>Logout</span>
+        </a>
+      </li><!-- End Logout Page Nav -->
+
     </ul>
 
   </aside><!-- End Sidebar-->

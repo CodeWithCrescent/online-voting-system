@@ -29,7 +29,7 @@ include 'includes/sidebar.php';
   if (file_exists($filePath)) {
     include $filePath;
   } else {
-    http_response_code(404);
+    // http_response_code(404);
     include "404.php";
   }
   ?>

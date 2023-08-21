@@ -231,11 +231,12 @@
     $("#add-election-form").find("input, select, textarea").each(function() {
       const input = $(this);
       const value = input.val().trim();
+    const errorMessage = input.data("error-message");
 
       if (value === "") {
         isValid = false;
         input.addClass("is-invalid");
-        input.siblings(".invalid-feedback").text("This field is required.");
+        input.siblings(".invalid-feedback").text(errorMessage);
       } else {
         input.removeClass("is-invalid");
         input.siblings(".invalid-feedback").text("");
@@ -302,7 +303,6 @@
   })
 
   window.editElection = function($title = '', $url = '') {
-    // start_load()
     $.ajax({
       url: $url,
       error: err => {
@@ -318,7 +318,6 @@
           $('#editElection .modal-title').html($title)
           $('#editElection .modal-body').html(resp)
           $('#editElection').modal('show')
-          // end_load()
         }
       }
     })
@@ -332,13 +331,15 @@
     $("#update-election-form").find("input, select, textarea").each(function() {
       const input = $(this);
       const value = input.val().trim();
+    const errorMessage = input.data("error-message");
+
       if (value === "") {
         isValid = false;
-        input.addClass("is-invalid"); // Add a CSS class for invalid inputs
-        input.siblings(".invalid-feedback").text("This field is required."); // Show error message
+        input.addClass("is-invalid");
+        input.siblings(".invalid-feedback").text(errorMessage);
       } else {
-        input.removeClass("is-invalid"); // Remove the CSS class if input is valid
-        input.siblings(".invalid-feedback").text(""); // Clear error message
+        input.removeClass("is-invalid");
+        input.siblings(".invalid-feedback").text("");
       }
     });
 
@@ -574,7 +575,7 @@
             '<a href="#" class="btn btn-primary btn-sm edit-category" data-id="' + category.id + '" data-name="' + category.name + '">' +
             '<i class="bi bi-pencil"></i> Edit' +
             '</a>' +
-            '<a href="#" class="btn btn-danger btn-sm category-delete" data-id="' + category.id + '" data-name="' + category.name + '">' +
+            '<a href="#" class="btn btn-danger btn-sm ms-3 category-delete" data-id="' + category.id + '" data-name="' + category.name + '">' +
             '<i class="bi bi-trash"></i> Delete' +
             '</a>' +
             '</td>' +
@@ -634,7 +635,7 @@
 
 <!-- Edit Category -->
 <script>
-  $('.edit-category').click(function() {
+  $(document).on('click', '.edit-category', function(e) {
     editCategory("Edit Category", 'edit_category.php?id=' + $(this).attr('data-id'))
   })
 
@@ -907,7 +908,7 @@
 
     // Create an array to store the selected vote data
     var selectedCandidates = [];
-    
+
     $('.vote-radio:checked').each(function() {
       var candidate_id = $(this).data('id');
       var category_id = $(this).data('category');
@@ -1041,6 +1042,8 @@
               setTimeout(function() {
                 window.location.href = 'index.php?page=results';
               }, 2000);
+            } else {
+              hideLoadingOverlay();
             }
           } else {
             hideLoadingOverlay();

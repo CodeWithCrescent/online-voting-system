@@ -113,7 +113,7 @@ if ($show_results) {
                     </div>
                   <?php } ?>
                   <div class="ps-3 col-4 d-flex flex-column align-items-center justify-content-center">
-                    <label class="vote-check-label card-icon rounded-circle"><input type="radio" class="vote-radio" name="vote-<?php echo strtolower(str_replace(' ', '-', $categoryName)); ?>" data-id="<?php echo $candidate['id']; ?>" data-category="<?php echo $candidate['category_id']; ?>" data-election="<?php echo $election_id; ?>">
+                    <label class="vote-check-label card-icon rounded-circle"><input required type="radio" class="vote-radio" name="vote-<?php echo strtolower(str_replace(' ', '-', $categoryName)); ?>" data-id="<?php echo $candidate['id']; ?>" data-category="<?php echo $candidate['category_id']; ?>" data-election="<?php echo $election_id; ?>">
                       <div class="checkmark"></div>
                     </label>
                     <span class="d-flex small small-text pt-2 text-nowrap text-sm-start text-md-center fw-bold">Vote</span>
@@ -173,7 +173,7 @@ if ($show_results) {
                         </div>
                       <?php } ?>
                       <div class="ps-3 col-6 d-flex flex-column align-items-center justify-content-center">
-                        <label class="vote-check-label card-icon rounded-circle"><input type="radio" class="vote-radio" name="vote-<?php echo strtolower(str_replace(' ', '-', $out['category_name'])); ?>" data-id="<?php echo $out['id']; ?>" data-category="<?php echo $out['category_id']; ?>" data-election="<?php echo $election_id; ?>">
+                        <label class="vote-check-label card-icon rounded-circle"><input required type="radio" class="vote-radio" name="vote-<?php echo strtolower(str_replace(' ', '-', $out['category_name'])); ?>" data-id="<?php echo $out['id']; ?>" data-category="<?php echo $out['category_id']; ?>" data-election="<?php echo $election_id; ?>">
                           <div class="checkmark"></div>
                         </label>
                       </div>

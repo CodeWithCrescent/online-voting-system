@@ -255,7 +255,7 @@ class Admin
 	function update_election()
 	{
 		extract($_POST);
-		$updated_by = $_SESSION['login_username'];
+		$updated_by = $_SESSION['login_id'];
 
 		if (!empty($election_id)) {
 			try {
@@ -264,7 +264,7 @@ class Admin
 					throw new Exception("Failed to prepare the query.");
 				}
 
-				$save->bind_param("sssssssi", $title, $year, $voters, $starttime, $endtime, $description, $updated_by, $election_id);
+				$save->bind_param("ssssssii", $title, $year, $voters, $starttime, $endtime, $description, $updated_by, $election_id);
 
 				if (!$save->execute()) {
 					throw new Exception("Failed to execute the query.");
@@ -314,7 +314,7 @@ class Admin
 	function election_status()
 	{
 		extract($_POST);
-		$updated_by = $_SESSION['login_username'];
+		$updated_by = $_SESSION['login_id'];
 
 		if (!empty($election_id)) {
 			try {
@@ -336,7 +336,7 @@ class Admin
 					throw new Exception("Failed to prepare the update query.");
 				}
 
-				$updateStatus->bind_param("si", $updated_by, $election_id);
+				$updateStatus->bind_param("ii", $updated_by, $election_id);
 
 				if (!$updateStatus->execute()) {
 					throw new Exception("Failed to execute the update query.");
@@ -360,7 +360,6 @@ class Admin
 	function vote_status()
 	{
 		extract($_POST);
-		$updated_by = 'Automatic';
 		$status = 0;
 
 		if (!empty($election_id)) {
@@ -372,7 +371,7 @@ class Admin
 					throw new Exception("Failed to prepare the update query.");
 				}
 
-				$updateStatus->bind_param("isi", $status, $updated_by, $election_id);
+				$updateStatus->bind_param("iii", $status, $updated_by, $election_id);
 
 				if (!$updateStatus->execute()) {
 					throw new Exception("Failed to execute the update query.");
@@ -397,7 +396,7 @@ class Admin
 	function add_category()
 	{
 		extract($_POST);
-		$added_by = $_SESSION['login_username'];
+		$added_by = $_SESSION['login_id'];
 
 		if (empty($id)) {
 			try {
@@ -406,7 +405,7 @@ class Admin
 					throw new Exception("Failed to prepare the query.");
 				}
 
-				$save->bind_param("iss", $election, $category, $added_by);
+				$save->bind_param("isi", $election, $category, $added_by);
 
 				if (!$save->execute()) {
 					throw new Exception("Failed to execute the query.");
@@ -425,7 +424,7 @@ class Admin
 	function update_category()
 	{
 		extract($_POST);
-		$updated_by = $_SESSION['login_username'];
+		$updated_by = $_SESSION['login_id'];
 
 		if (!empty($category_id)) {
 			try {
@@ -434,7 +433,7 @@ class Admin
 					throw new Exception("Failed to prepare the query.");
 				}
 
-				$save->bind_param("ssi", $category, $updated_by, $category_id);
+				$save->bind_param("sii", $category, $updated_by, $category_id);
 
 				if (!$save->execute()) {
 					throw new Exception("Failed to execute the query.");
@@ -798,7 +797,7 @@ class Admin
 	function update_profile()
 	{
 		extract($_POST);
-		$updated_by = $_SESSION['login_username'];
+		$updated_by = $_SESSION['login_id'];
 
 		if (empty($fullName) || empty($username)) {
 			echo json_encode(array('status' => 'error', 'message' => 'Please fill in all the required fields.'));

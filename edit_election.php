@@ -59,6 +59,6 @@ if (isset($_GET['id'])) {
   $conn->close();
 } else {
 
-  echo "500 Error! No id found in URL.";
+  echo "500 Error! No Election Found.";
 }
 ?>

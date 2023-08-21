@@ -116,7 +116,7 @@ $row = $stmt->get_result()->fetch_assoc();
                         <input type="file" name="profileImage" id="profileImage" class="visually-hidden" accept="image/*">
                         <i class="bi bi-upload"></i>
                       </label>
-                      <a href="#" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a>
+                      <!-- <a href="#" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a> -->
                     </div>
                   </div>
                 </div>

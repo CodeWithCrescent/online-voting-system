@@ -33,7 +33,7 @@ $result = $row->get_result();
         <div class="card-header d-flex align-items-center justify-content-between">
             <h5 class="card-title m-0">Categories</h5>
 
-            <a href="#" type="button" class="btn btn-primary btn-sm add-category disabled" data-bs-toggle="modal" data-bs-target="#addCategory" data-id="<?php echo $election_id; ?>">Add New</a>
+            <a href="#" type="button" class="btn btn-primary btn-sm add-category disabled" data-bs-toggle="modal" data-bs-target="#addCategory" data-id="<?php echo isset($_GET['election_id']) ? $election_id : ''; ?>">Add New</a>
         </div>
         <span class="small d-inline-block d-md-none" data-toggle="tooltip" data-placement="left" title="Scroll horizontally to view more content">
             <i class="bi bi-arrows-expand"></i> Scroll Horizontally
