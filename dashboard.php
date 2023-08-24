@@ -36,7 +36,7 @@ $result = $conn->query($query);
     <div class="row">
         <?php if ($result->num_rows > 0) {
             $row = $result->fetch_assoc(); ?>
-            <div class="col-lg-8">
+            <div class="col-12">
                 <div class="row">
                     <!-- Elections Card -->
                     <div class="col-xxl-4 col-md-6">
@@ -129,78 +129,62 @@ $result = $conn->query($query);
                 </div>
             </div>
         <?php } ?>
-        <div class="col-lg-4">
-            <!-- Recent Activity -->
-            <div class="card">
-                <div class="filter">
-                    <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                        <li class="dropdown-header text-start">
-                            <h6>Filter</h6>
-                        </li>
-
-                        <li><a class="dropdown-item" href="#">Today</a></li>
-                        <li><a class="dropdown-item" href="#">This Month</a></li>
-                        <li><a class="dropdown-item" href="#">This Year</a></li>
-                    </ul>
-                </div>
-
-                <div class="card-body">
-                    <h5 class="card-title">Recent Activity <span>| Today</span></h5>
-
-                    <div class="activity">
-
-                        <div class="activity-item d-flex">
-                            <div class="activite-label">32 min</div>
-                            <i class='bi bi-circle-fill activity-badge text-success align-self-start'></i>
-                            <div class="activity-content">
-                                Crescent: Verified and uploaded the list of eligible <a href="#" class="fw-bold text-dark">candidates</a> for the election
-                            </div>
-                        </div><!-- End activity item-->
-
-                        <div class="activity-item d-flex">
-                            <div class="activite-label">56 min</div>
-                            <i class='bi bi-circle-fill activity-badge text-danger align-self-start'></i>
-                            <div class="activity-content">
-                                Maziba: Approved voter registration for Justo Kimei.
-                            </div>
-                        </div><!-- End activity item-->
-
-                        <div class="activity-item d-flex">
-                            <div class="activite-label">2 hrs</div>
-                            <i class='bi bi-circle-fill activity-badge text-primary align-self-start'></i>
-                            <div class="activity-content">
-                                Crescent: Sent reminder emails to registered voters about upcoming elections.
-                            </div>
-                        </div><!-- End activity item-->
-
-                        <div class="activity-item d-flex">
-                            <div class="activite-label">1 day</div>
-                            <i class='bi bi-circle-fill activity-badge text-info align-self-start'></i>
-                            <div class="activity-content">
-                                Crescent: Added new <a href="#" class="fw-bold text-dark">category</a> for <a href="#" class="fw-bold text-dark">MUSTSO 2023</a> election
-                            </div>
-                        </div><!-- End activity item-->
-
-                        <div class="activity-item d-flex">
-                            <div class="activite-label">2 days</div>
-                            <i class='bi bi-circle-fill activity-badge text-warning align-self-start'></i>
-                            <div class="activity-content">
-                                Anna: Deleted Presidential candidate named Jakaya M. Kikwete
-                            </div>
-                        </div><!-- End activity item-->
-
-                        <div class="activity-item d-flex">
-                            <div class="activite-label">4 weeks</div>
-                            <i class='bi bi-circle-fill activity-badge text-muted align-self-start'></i>
-                            <div class="activity-content">
-                                Efei: Added Presidential candidate named Jakaya M. Kikwete
-                            </div>
-                        </div><!-- End activity item-->
-
-                    </div>
-                </div>
-            </div><!-- End Recent Activity -->
+    </div>
+    <div class="row">
+        <?php
+        $users = $conn->prepare("SELECT * FROM users");
+        $users->execute();
+        $row = $users->get_result();
+        ?>
+        <div class="card">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <h3 class="card-title m-0">System Users</h3>
+            </div>
+            <span class="small d-inline-block d-md-none" data-toggle="tooltip" data-placement="left" title="Scroll horizontally to view more content">
+                <i class="bi bi-arrow-left-right"></i> Scroll Horizontally
+            </span>
+            <div class="card-body table-responsive">
+                <table id="users-table" class="table text-nowrap table-hover" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="text-center">Profile</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Role</th>
+                            <th scope="col">Password</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($row as $key => $user) { ?>
+                            <tr>
+                                <th scope="row" class="text-center">
+                                    <a href="#">
+                                        <?php if ($user['profile_picture']) { ?>
+                                            <img src="assets/img/profile/users/<?php echo $user['profile_picture']; ?>" class="rounded-circle" style="width: 60px;" alt="Profile Picture">
+                                            <span class="avatar-badge idle" title="idle"></span>
+                                        <?php } else { ?>
+                                            <img src="assets/img/user.png" class="rounded-circle" style="width: 60px;" alt="Profile Picture">
+                                            <span class="avatar-badge idle" title="idle"></span>
+                                        <?php } ?>
+                                    </a>
+                                </th>
+                                <td>
+                                    <h6 class="fw-semibold">
+                                        <a href="#"><?php echo $user['name']; ?></a> <small class="text-muted">@<?php echo $user['username']; ?></small>
+                                    </h6>
+                                    <h6 class="card-subtitle text-lowercase fst-italic fw-light"><?php echo $user['email']; ?></h6>
+                                </td>
+                                <?php
+                                if ($user['type'] === 0) {
+                                    echo '<td><a href="#" name="type" class="btn badge rounded-pill btn-primary user-type" data-id="' . $user['id'] . '" data-type="1" data-name="Normal user">Admin</a></td>';
+                                } else {
+                                    echo '<td><a href="#" name="type" class="btn badge rounded-pill btn-secondary user-type" data-id="' . $user['id'] . '" data-type="0" data-name="Admin">User</a></td>';
+                                } ?>
+                                <td><a href="#" class="btn btn-sm btn-secondary reset" data-id="<?php echo $user['id']; ?>" data-name="Reset">Reset</a></td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </section>

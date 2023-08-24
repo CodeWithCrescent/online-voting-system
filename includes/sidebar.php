@@ -30,20 +30,6 @@
             </li>
           </ul>
         </li><!-- End Configuration Page Nav -->
-
-        <li class="nav-item">
-          <a class="nav-link<?php echo isset($_GET['page']) && $_GET['page'] === 'users' ? '' : ' collapsed'; ?>" href="index.php?page=users">
-            <i class="bi bi-people"></i>
-            <span>Users</span>
-          </a>
-        </li><!-- End Users Page Nav -->
-
-        <li class="nav-item">
-          <a class="nav-link<?php echo isset($_GET['page']) && ($_GET['page'] === 'vote' || $_GET['page'] === 'vote_details') ? '' : ' collapsed'; ?>" href="index.php?page=vote">
-            <i class="bi bi-box2"></i>
-            <span>Vote</span>
-          </a>
-        </li><!-- End Vote Page Nav -->
       <?php } ?>
       <li class="nav-item">
         <a class="nav-link<?php echo isset($_GET['page']) && $_GET['page'] === 'results' ? '' : ' collapsed'; ?>" href="index.php?page=results">
@@ -51,6 +37,13 @@
           <span>Results</span>
         </a>
       </li><!-- End Results Page Nav -->
+
+      <li class="nav-item">
+        <a class="nav-link<?php echo isset($_GET['page']) && $_GET['page'] === 'profile' ? '' : ' collapsed'; ?>" href="index.php?page=profile">
+          <i class="bi bi-person"></i>
+          <span>Profile</span>
+        </a>
+      </li><!-- End Profile Page Nav -->
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="controllers/app.php?action=logout">

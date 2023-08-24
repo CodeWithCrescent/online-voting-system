@@ -231,6 +231,8 @@ class Admin
 
 		if (empty($id)) {
 			try {
+				$title = ucwords($title);
+
 				$save = $this->db->prepare("INSERT INTO election (title, year, voters, starttime, endtime, description, added_by) VALUES (?, ?, ?, ?, ?, ?, ?)");
 				if (!$save) {
 					throw new Exception("Failed to prepare the query.");
@@ -246,8 +248,6 @@ class Admin
 				echo json_encode(array('status' => 'error', 'message' => 'Failed to add election! Try again later.'));
 			}
 		} else {
-			// $save = $this->db->query("UPDATE election set ".$data." where id =".$id);
-			// if($save)
 			return 2;
 		}
 	}
@@ -259,6 +259,8 @@ class Admin
 
 		if (!empty($election_id)) {
 			try {
+				$title = ucwords($title);
+
 				$save = $this->db->prepare("UPDATE election SET title = ?, year = ?, voters = ?, starttime = ?, endtime = ?, description = ?, updated_by = ? WHERE id = ?");
 				if (!$save) {
 					throw new Exception("Failed to prepare the query.");
@@ -360,6 +362,7 @@ class Admin
 	function vote_status()
 	{
 		extract($_POST);
+		$updated_by = $_SESSION['login_id'];
 		$status = 0;
 
 		if (!empty($election_id)) {
@@ -400,6 +403,8 @@ class Admin
 
 		if (empty($id)) {
 			try {
+				$category = ucwords($category);
+
 				$save = $this->db->prepare("INSERT INTO categories (election_id, name, added_by) VALUES (?, ?, ?)");
 				if (!$save) {
 					throw new Exception("Failed to prepare the query.");
@@ -428,6 +433,8 @@ class Admin
 
 		if (!empty($category_id)) {
 			try {
+				$category = ucwords($category);
+
 				$save = $this->db->prepare("UPDATE categories SET name = ?, updated_by = ? WHERE id = ?");
 				if (!$save) {
 					throw new Exception("Failed to prepare the query.");
@@ -491,6 +498,8 @@ class Admin
 		}
 
 		try {
+			$candidate = ucwords($candidate);
+			$fellow_candidate = ucwords($fellow_candidate);
 			// Check if Category_id exists in the categories table
 			$check_category = $this->db->prepare("SELECT id FROM categories WHERE id = ?");
 			if (!$check_category) {
@@ -582,6 +591,9 @@ class Admin
 
 		if (!empty($candidate_id)) {
 			try {
+				$candidate = ucwords($candidate);
+				$fellow_candidate = ucwords($fellow_candidate);
+				
 				// Check if Category_id exists in the categories table
 				$check_category = $this->db->prepare("SELECT id FROM categories WHERE id = ?");
 				if (!$check_category) {
@@ -806,6 +818,7 @@ class Admin
 
 		if (!empty($user)) {
 			try {
+				$fullName = ucwords($fullName);
 				$current_user_id = $_SESSION['login_id'];
 
 				$check_username = $this->db->prepare("SELECT username FROM users WHERE username = ? AND id <> ?");
@@ -827,23 +840,23 @@ class Admin
 				}
 
 				// Check if Email exists in the users table for other users
-				$check_email = $this->db->prepare("SELECT email FROM users WHERE email = ? AND id <> ?");
-				if (!$check_email) {
-					throw new Exception("Failed to prepare the query.");
-				}
+				// $check_email = $this->db->prepare("SELECT email FROM users WHERE email = ? AND id <> ?");
+				// if (!$check_email) {
+				// 	throw new Exception("Failed to prepare the query.");
+				// }
 
-				$check_email->bind_param("si", $email, $current_user_id);
+				// $check_email->bind_param("si", $email, $current_user_id);
 
-				if (!$check_email->execute()) {
-					throw new Exception("Failed to execute the query.");
-				}
+				// if (!$check_email->execute()) {
+				// 	throw new Exception("Failed to execute the query.");
+				// }
 
-				$result = $check_email->get_result();
+				// $result = $check_email->get_result();
 
-				if ($result->num_rows > 0) {
-					echo json_encode(array('status' => 'error', 'message' => 'Email already exists. Please use different.'));
-					return;
-				}
+				// if ($result->num_rows > 0) {
+				// 	echo json_encode(array('status' => 'error', 'message' => 'Email already exists. Please use different.'));
+				// 	return;
+				// }
 
 				// Fetch the user profile name from db
 				$user_profile_check = $this->db->prepare("SELECT * FROM users WHERE id = ?");

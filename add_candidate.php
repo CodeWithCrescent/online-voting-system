@@ -36,7 +36,7 @@ $result = $stmt->get_result();
     </div>
     <div class="col-md-6">
       <label for="candidate_photo" class="form-label">Candidate Photo</label>
-      <input class="form-control" type="file" accept="image/*" id="candidate_photo"  name="candidate_photo" data-error-message="Please upload candidate's photo" placeholder="">
+      <input class="form-control" type="file" accept="image/*" id="candidate_photo" name="candidate_photo" data-error-message="Please upload candidate's photo" placeholder="">
       <div class="invalid-feedback"></div>
     </div>
     <div class="col-md-6">
@@ -57,7 +57,7 @@ $result = $stmt->get_result();
     </div>
     <div class="col-md-6">
       <label for="fellow_candidate_photo" class="form-label">Fellow Candidate Photo</label>
-      <input class="form-control" type="file" accept="image/*" id="fellow_candidate_photo"  name="fellow_candidate_photo" data-error-message="Please upload candidate's photo" placeholder="">
+      <input class="form-control" type="file" accept="image/*" id="fellow_candidate_photo" name="fellow_candidate_photo" data-error-message="Please upload candidate's photo" placeholder="">
       <div class="invalid-feedback"></div>
     </div>
     <div class="col-md-6">
@@ -113,18 +113,27 @@ $result = $stmt->get_result();
           processData: false,
           contentType: false,
           dataType: 'json',
+          beforeSend: function() {
+            showLoadingOverlay();
+          },
+          // complete: function() {
+          //   toastr.success('Successful Added!');
+          // },
           success: function(response) {
             console.log(response);
             if (response.status === 'success') {
               location.href = response.redirect_url;
             } else if (response.status === 'error') {
+              hideLoadingOverlay();
               $('#add-candidate-form').prepend('<div class="alert alert-danger">' + response.message + '</div>');
             } else {
+              hideLoadingOverlay();
               $('#add-candidate-form').prepend('<div class="alert alert-danger">' + response.message + '</div>');
             }
           },
           error: function(xhr, status, error) {
             console.error(error);
+            hideLoadingOverlay();
             $('#add-candidate-form').prepend('<div class="alert alert-danger">An error occurred while processing the request.</div>');
           }
         });

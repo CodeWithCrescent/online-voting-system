@@ -3,7 +3,7 @@ include 'config/dbconnection.php';
 include 'config/session.php';
 include 'config/isadmin.php';
 
-$row = $conn->prepare("SELECT * FROM election");
+$row = $conn->prepare("SELECT * FROM election ORDER BY created_at DESC");
 $row->execute();
 $result = $row->get_result();
 ?>

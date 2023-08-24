@@ -49,7 +49,7 @@ include 'includes/head.php'
                     </div>
 
                     <div class="col-12">
-                      <label for="username" class="form-label">Username</label>
+                      <label for="username" class="form-label">Registration No.</label>
                       <div class="input-group has-validation">
                         <span class="input-group-text" id="inputGroupPrepend"><i class="ri-user-3-fill"></i></span>
                         <input type="text" name="username" class="form-control" id="username" required>

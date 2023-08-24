@@ -38,13 +38,13 @@ include 'includes/head.php';
 
                   <div class="pt-4 pb-2">
                     <h5 class="card-title text-center pb-0 fs-4">Login</h5>
-                    <p class="text-center small">Enter your username & password to login</p>
+                    <p class="text-center small">Enter your Registration no. & password to login</p>
                   </div>
 
                   <form class="row g-3" novalidate id="login-form">
 
                     <div class="col-12">
-                      <label for="username" class="form-label">Username</label>
+                      <label for="username" class="form-label">Registration No.</label>
                       <div class="input-group has-validation">
                         <span class="input-group-text" id="inputGroupPrepend"><i class="ri-user-3-fill"></i></span>
                         <input type="text" name="username" class="form-control" id="username" required>

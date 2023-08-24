@@ -22,7 +22,7 @@ include 'config/session.php';
                     </div>
                     <h1>Online Voting System</h1>
                     <p class="lead mb-5">Mbeya University of Science and Technology<br>
-                        Mbeya - Tanzania
+                        Mbeya
                     </p>
                 </div>
             </div>

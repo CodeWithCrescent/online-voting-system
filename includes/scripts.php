@@ -261,11 +261,11 @@
           endtime: endTimestamp,
           description: $('#description').val()
         },
+        dataType: 'json',
         beforeSend: function() {
           showLoadingOverlay();
         },
-        success: function(resp) {
-          var response = JSON.parse(resp);
+        success: function(response) {
           if (response.status === 'success') {
             location.href = response.redirect_url;
           } else if (resp == 2) {
@@ -525,7 +525,6 @@
   })
 
   window.addCategory = function($title = '', $url = '') {
-    // start_load()
     $.ajax({
       url: $url,
       error: err => {
@@ -541,7 +540,6 @@
           $('#addCategory .modal-title').html($title)
           $('#addCategory .modal-body').html(resp)
           $('#addCategory').modal('show')
-          // end_load()
         }
       }
     })
@@ -1079,7 +1077,7 @@
       [2, "asc"]
     ],
     "buttons": ["excel", "pdf", "print"]
-  }).buttons().container().appendTo('.card .card-header:eq(0)');
+  });
 </script>
 
 <script>

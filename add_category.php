@@ -8,7 +8,7 @@ if (isset($_GET['election_id']) && is_numeric($_GET['election_id'])) {
   exit;
 }
 
-$row = $conn->prepare("SELECT * FROM election");
+$row = $conn->prepare("SELECT * FROM election ORDER BY created_at DESC");
 $row->execute();
 $result = $row->get_result();
 ?>
@@ -17,19 +17,8 @@ $result = $row->get_result();
   <div class="modal-body">
     <div class="row g-3">
       <div class="col-md-12">
-        <label for="election" class="form-label">Election</label>
-        <select class="form-select" name="election" id="election" data-error-message="Select Election">
-          <option value="" hidden>Select Election</option>
-          <?php
-          foreach ($result as $key => $value) {
-            echo '<option value="' . $value['id'] . '">' . $value['title'] . '</option>';
-          }
-          ?>
-        </select>
-        <div class="invalid-feedback"></div>
-      </div>
-      <div class="col-md-12">
         <label for="category" class="form-label">Category Name</label>
+        <input type="hidden" name="election" id="election" value="<?php echo $election_id; ?>">
         <input type="text" name="category" class="form-control" id="category" data-error-message="Category is required">
         <div class="invalid-feedback"></div>
       </div>
