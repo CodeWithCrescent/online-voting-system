@@ -44,11 +44,11 @@ if ($show_results) {
         </div><!-- End Page Title -->
 
         <section class="section dashboard row">
-            <!-- Vote Form -->
-            <div id="results" class="col-xxl-4 col-xl-12">
+            <!-- Results Form -->
+            <div class="col-xxl-4 col-xl-12">
 
                 <!-- .Remaining-time-message -->
-                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                <div id="hide" class="alert alert-info alert-dismissible fade show" role="alert">
                     <i class="bi bi-info-circle me-1"></i> Time Remaining: <span class="text-muted" id="countdown"></span>
                     <button type="button" class="btn-close" aria-label="Close" onclick="$(this).parent().fadeOut()"></button>
                 </div><!-- /.Remaining-time-message -->
@@ -125,17 +125,10 @@ if ($show_results) {
                 }
                 ?>
 
-            </div><!-- End Vote div -->
-            <!-- <button class="btn btn-primary" onclick="printDiv('results')">PRINT RESULTS</button> -->
-            <script type="text/javascript">
-                function printDiv(results) {
-                    var printResults = document.getElementById('results').innerHTML;
-                    w = window.open();
-                    w.document.write(printResults);
-                    w.print();
-                    w.close();
-                }
-            </script>
+            </div><!-- End Results div -->
+            <div class="row" id="hide">
+                <button class="btn btn-primary col-4 offset-4" onclick="printDiv('results')">PRINT RESULTS</button>
+            </div>
         </section>
     <?php } else { ?>
         <div class="pagetitle">

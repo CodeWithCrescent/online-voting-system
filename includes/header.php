@@ -9,7 +9,7 @@
   $stmt->execute();
   $row = $stmt->get_result()->fetch_assoc();
   ?>
-  <header id="header" class="header fixed-top d-flex align-items-center">
+  <header id="header hide" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between">
       <a href="index.php" class="logo d-flex align-items-center">
