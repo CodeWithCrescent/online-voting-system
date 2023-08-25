@@ -5,7 +5,7 @@ include 'config/dbconnection.php';
 include 'config/session.php';
 
 echo '<!DOCTYPE html>
-<html lang="en">';
+<html lang="en" id="results">';
 
 include 'includes/head.php';
 
@@ -45,3 +45,29 @@ include 'includes/scripts.php';
 </body>
 
 </html>
+
+<script type="text/javascript">
+  function printDiv(results) {
+    var elementsToRemove = document.querySelectorAll("a, header, [id='hide']");
+    var removedElements = [];
+
+    elementsToRemove.forEach(function(element) {
+      removedElements.push(element);
+      element.remove();
+    });
+
+    var printResults = document.getElementById('results').innerHTML;
+    var printWindow = window.open();
+
+    printWindow.document.write(printResults);
+    printWindow.document.close();
+    printWindow.print();
+    printWindow.close();
+
+    removedElements.forEach(function(element) {
+      document.body.appendChild(element);
+    });
+
+    location.reload();
+  }
+</script>
