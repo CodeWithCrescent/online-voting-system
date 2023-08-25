@@ -182,7 +182,7 @@
   /*--------------------------------------------------------------
   # Back to top button
   --------------------------------------------------------------*/
-  .back-to-top {
+  .back-to-top, .btn-custom {
     position: fixed;
     visibility: hidden;
     opacity: 0;
@@ -196,18 +196,18 @@
     transition: all 0.4s;
   }
   
-  .back-to-top i {
+  .back-to-top i, .btn-custom i {
     font-size: 24px;
     color: #fff;
     line-height: 0;
   }
   
-  .back-to-top:hover {
+  .back-to-top:hover, .btn-custom:hover {
     background: #6776f4;
     color: #fff;
   }
   
-  .back-to-top.active {
+  .back-to-top.active, .btn-custom.active {
     visibility: visible;
     opacity: 1;
   }
