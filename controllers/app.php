@@ -122,3 +122,9 @@ if ($action == 'update_profile') {
 	if ($save)
 		echo $save;
 }
+
+if ($action == 'generate_pdf') {
+	$save = $admin->generate_pdf();
+	if ($save)
+		echo $save;
+}
