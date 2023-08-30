@@ -593,7 +593,7 @@ class Admin
 			try {
 				$candidate = ucwords($candidate);
 				$fellow_candidate = ucwords($fellow_candidate);
-				
+
 				// Check if Category_id exists in the categories table
 				$check_category = $this->db->prepare("SELECT id FROM categories WHERE id = ?");
 				if (!$check_category) {
@@ -942,6 +942,30 @@ class Admin
 		} else {
 			// ID does not exist
 			echo json_encode(array('status' => 'error', 'message' => 'Failed to update user type! Contact administrator for help.'));
+		}
+	}
+
+	function generate_pdf()
+	{
+		require_once('tcpdf/tcpdf.php');
+
+		if (isset($_POST['content'])) {
+			// Get the content from the POST request
+			$content = $_POST['content'];
+
+			// Create a new PDF instance
+			// $pdf = new TCPDF();
+
+			// Set PDF title and content
+			$pdf->SetTitle('Results PDF');
+			$pdf->AddPage();
+			$pdf->writeHTML($content);
+
+			// Save the PDF to a folder
+			$pdf->Output('path_to_your_folder/results.pdf', 'F');
+
+			// Return a response if needed
+			echo 'PDF saved successfully.';
 		}
 	}
 }
