@@ -56,6 +56,21 @@ include 'includes/scripts.php';
       element.remove();
     });
 
+    var elementsToCenter = document.querySelectorAll("[id='center_div']");
+    elementsToCenter.forEach(function(element) {
+      element.classList.add("text-center");
+      var span = document.createElement("span");
+
+      <?php
+      $formattedEndTime = date('D j F Y', strtotime($endtime));
+      ?>
+
+      span.textContent = "Voting Ended at: <?php echo $formattedEndTime; ?>";
+      element.appendChild(span);
+    });
+
+
+
     var printResults = document.getElementById('results').innerHTML;
     var printWindow = window.open();
 
