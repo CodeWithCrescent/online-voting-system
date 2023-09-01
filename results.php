@@ -128,10 +128,12 @@ if ($show_results) {
                 ?>
 
             </div><!-- End Results div -->
+            <?php if ($_SESSION['login_type'] == 0) { ?>
             <div class="row" id="hide">
                 <button class="btn btn-primary col-4 offset-1" onclick="printDiv('results')">EXPORT PDF</button>
                 <a class="btn btn-primary col-4 offset-1" href="controllers/export_excel.php?action=export_results&election_id=<?php echo $election_id; ?>">EXPORT EXCEL</a>
             </div>
+            <?php } ?>
         </section>
     <?php } else { ?>
         <div class="pagetitle">
