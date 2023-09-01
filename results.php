@@ -33,9 +33,9 @@ if ($show_results) {
 
 ?>
 
-        <div class="pagetitle">
+        <div id="center_div" class="pagetitle">
             <h1><?php echo $election_title; ?></h1>
-            <nav>
+            <nav id="hide">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="index.php">Home</a></li>
                     <li class="breadcrumb-item active">Results</li>
@@ -72,8 +72,9 @@ if ($show_results) {
                             <ol class="list-group list-group-numbered">
                                 <?php
                                 foreach ($categoryCandidates as $key => $candidate) {
+                                    $listClass = ($key === 0) ? 'list-group-item d-flex justify-content-between align-items-start test-x' : 'list-group-item d-flex justify-content-between align-items-start';
                                 ?>
-                                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                                    <li class="<?php echo $listClass; ?>">
                                         <div class="ms-2 me-auto">
                                             <div class="fw-bold"><?php echo $candidate['name']; ?></div>
                                             <div class="fw-light"><?php echo $candidate['fellow_candidate_name']; ?></div>
@@ -108,8 +109,9 @@ if ($show_results) {
                             <ol class="list-group list-group-numbered">
                                 <?php
                                 foreach ($categoryCandidates as $key => $out) {
+                                    $listClass = ($key === 0) ? 'list-group-item d-flex justify-content-between align-items-start test-x' : 'list-group-item d-flex justify-content-between align-items-start';
                                 ?>
-                                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                                    <li class="<?php echo $listClass; ?>">
                                         <div class="ms-2 me-auto">
                                             <div class="fw-semibold"><?php echo $out['name']; ?></div>
                                         </div>
@@ -127,7 +129,8 @@ if ($show_results) {
 
             </div><!-- End Results div -->
             <div class="row" id="hide">
-                <button class="btn btn-primary col-4 offset-4" onclick="printDiv('results')">PRINT RESULTS</button>
+                <button class="btn btn-primary col-4 offset-1" onclick="printDiv('results')">EXPORT PDF</button>
+                <a class="btn btn-primary col-4 offset-1" href="controllers/export_excel.php?action=export_results&election_id=<?php echo $election_id; ?>">EXPORT EXCEL</a>
             </div>
         </section>
     <?php } else { ?>
