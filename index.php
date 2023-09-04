@@ -40,6 +40,20 @@ include 'includes/sidebar.php';
 include 'includes/footer.php';
 
 include 'includes/scripts.php';
+
+if (isset($_GET['msg'])) {
+  $msg = urldecode($_GET['msg']);
+  echo '<script>toastr.success("' . $msg . '");
+  setTimeout(() => {
+      window.location.href = "index.php?page=reports"
+    }, 2500);</script>';
+} elseif (isset($_GET['err'])) {
+  $err = urldecode($_GET['err']);
+  echo '<script>toastr.error("' . $err . '");
+  setTimeout(() => {
+    window.location.href = "index.php?page=results"
+  }, 2500);</script>';
+}
 ?>
 
 </body>
@@ -62,14 +76,13 @@ include 'includes/scripts.php';
       var span = document.createElement("span");
 
       <?php
-      $formattedEndTime = date('D j F Y', strtotime($endtime));
+      $formattedStartTime = date('D j M, Y', strtotime($starttime));
+      $formattedEndTime = date('D j M, Y', strtotime($endtime));
       ?>
 
-      span.textContent = "Voting Ended at: <?php echo $formattedEndTime; ?>";
+      span.textContent = "Voting started on <?php echo $formattedStartTime; ?> & Ended on <?php echo $formattedEndTime; ?>";
       element.appendChild(span);
     });
-
-
 
     var printResults = document.getElementById('results').innerHTML;
     var printWindow = window.open();
