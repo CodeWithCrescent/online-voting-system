@@ -48,6 +48,18 @@ include 'config/isadmin.php';
                     $election->execute();
                     $result = $election->get_result();
                     while ($row = $result->fetch_assoc()) {
+                        $filesize = filesize('assets/reports/'.$row['report_path']);
+                        $formatByte = formatBytes($filesize);
+
+                        function formatBytes($bytes, $precision = 2) {
+                            $units = array("B", "KB", "MB", "GB", "TB");
+                            $bytes = max($bytes, 0);
+                            $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+                            $pow = min($pow, count($units) - 1);
+                            $bytes /= (1 << (10 * $pow));
+                        
+                            return round($bytes, $precision) . " " . $units[$pow];
+                        }
 
                         echo
                         '<tr>
@@ -56,7 +68,7 @@ include 'config/isadmin.php';
                         <td>' . $row['year'] . '</td>
                         <td>' . $row['admin_name'] . '</td>
                         <td>' . $row['created_at'] . '</td>
-                        <td class="text-center" ><a href="#" class="btn btn-primary btn-sm" data-id="' . $row['id'] . '"><i class="bi bi-download d-md-none"></i> <span class="d-none d-md-inline">Download</span> [4kb]</a>
+                        <td class="text-center" ><a href="#" class="btn btn-primary btn-sm" data-id="' . $row['id'] . '"><i class="bi bi-download d-md-none"></i> <span class="d-none d-md-inline">Download</span> ['.$formatByte.']</a>
                         <a href="#" class="btn btn-danger btn-sm delete-report" data-id="' . $row['id'] . '" data-name="' . $row['title'] . '"><i class="bi bi-trash"></i> Delete</a></td>
                         </tr>';
                     } ?>
