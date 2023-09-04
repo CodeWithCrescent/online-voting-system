@@ -12,7 +12,7 @@ $show_results = $temp->fetch_assoc();
 if ($show_results) {
 
     $stmt = $conn->prepare("
-    SELECT c.*, cat.name AS category_name, e.title AS election_name, e.id AS election_id, e.endtime AS endtime, COUNT(v.id) AS votes_count
+    SELECT c.*, cat.name AS category_name, e.title AS election_name, e.id AS election_id, e.report_path AS report, e.starttime AS starttime, e.endtime AS endtime, COUNT(v.id) AS votes_count
     FROM candidates c
     JOIN categories cat ON c.category_id = cat.id
     JOIN election e ON c.election_id = e.id
@@ -29,6 +29,7 @@ if ($show_results) {
     if ($row) {
         $election_title = $row['election_name'];
         $election_id = $row['election_id'];
+        $starttime = $row['starttime'];
         $endtime = $row['endtime'];
 
 ?>
@@ -130,8 +131,12 @@ if ($show_results) {
             </div><!-- End Results div -->
             <?php if ($_SESSION['login_type'] == 0) { ?>
             <div class="row" id="hide">
-                <button class="btn btn-primary col-4 offset-1" onclick="printDiv('results')">EXPORT PDF</button>
-                <a class="btn btn-primary col-4 offset-1" href="controllers/export_excel.php?action=export_results&election_id=<?php echo $election_id; ?>">GENERATE EXCEL</a>
+                <button class="btn btn-primary col-4 offset-<?php echo $row['report'] == '' ? '1' : '4' ?>" onclick="printDiv('results')">EXPORT PDF</button>
+                <?php
+                if ($row['report'] == '') {
+                echo '<a class="btn btn-primary col-4 offset-1" href="controllers/export_excel.php?action=export_results&election_id='.$election_id.'">GENERATE EXCEL</a>';
+                }
+                ?>
             </div>
             <?php } ?>
         </section>
