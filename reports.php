@@ -75,7 +75,7 @@ include 'config/isadmin.php';
                         <td>' . $row['year'] . '</td>
                         <td>' . $row['admin_name'] . '</td>
                         <td>' . $row['created_at'] . '</td>
-                        <td class="text-center" ><a href="#" class="btn btn-primary btn-sm download-report" data-id="' . $row['id'] . '"><i class="bi bi-download d-md-none"></i> <span class="d-none d-md-inline">Download</span> [' .$formattedSize .$units[$unit]. ']</a>
+                        <td class="text-center" ><a href="controllers/export_excel.php?action=download_report&election_id=' . $row['id'] . '" class="btn btn-primary btn-sm" data-id="' . $row['id'] . '"><i class="bi bi-download d-md-none"></i> <span class="d-none d-md-inline">Download</span> [' .$formattedSize .$units[$unit]. ']</a>
                         <a href="#" class="btn btn-danger btn-sm delete-report" data-id="' . $row['id'] . '" data-name="' . $row['title'] . '"><i class="bi bi-trash"></i> Delete</a></td>
                         </tr>';
                     } ?>
