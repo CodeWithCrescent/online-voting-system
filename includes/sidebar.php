@@ -38,6 +38,15 @@
         </a>
       </li><!-- End Results Page Nav -->
 
+      <?php if ($_SESSION['login_type'] == 0) { ?>
+        <li class="nav-item">
+          <!-- <a class="nav-link<?php //echo isset($_GET['page']) && $_GET['page'] === 'reports' ? '' : ' collapsed'; ?>" href="index.php?page=reports">
+            <i class="bi bi-bookmark"></i>
+            <span>Reports</span>
+          </a> -->
+        </li><!-- End Reports Page Nav -->
+      <?php } ?>
+
       <li class="nav-item">
         <a class="nav-link<?php echo isset($_GET['page']) && $_GET['page'] === 'profile' ? '' : ' collapsed'; ?>" href="index.php?page=profile">
           <i class="bi bi-person"></i>
