@@ -134,7 +134,8 @@ if ($show_results) {
                 <button class="btn btn-primary col-4 offset-<?php echo $row['report'] == '' ? '1' : '4' ?>" onclick="printDiv('results')">EXPORT PDF</button>
                 <?php
                 if ($row['report'] == '') {
-                echo '<a class="btn btn-primary col-4 offset-1" href="controllers/export_excel.php?action=export_results&election_id='.$election_id.'">GENERATE EXCEL</a>';
+                // echo '<a class="btn btn-primary col-4 offset-1" href="controllers/export_excel.php?action=export_results&election_id='.$election_id.'">GENERATE EXCEL</a>';
+                echo '<a class="btn btn-primary col-4 offset-1" href="controllers/export_excel.php?action=export_excel&election_id='.$election_id.'">EXPORT EXCEL</a>';
                 }
                 ?>
             </div>
