@@ -110,6 +110,20 @@ if ($action == 'user_type') {
 		echo $save;
 }
 
+// ****** ELECTION REPORT ****** //
+
+if ($action == 'download_report') {
+	$save = $admin->download_report();
+	if ($save)
+		echo $save;
+}
+
+if ($action == 'delete_report') {
+	$save = $admin->delete_report();
+	if ($save)
+		echo $save;
+}
+
 // ******* VOTERS ************* //
 if ($action == 'vote') {
 	$save = $admin->vote();
@@ -119,12 +133,6 @@ if ($action == 'vote') {
 
 if ($action == 'update_profile') {
 	$save = $admin->update_profile();
-	if ($save)
-		echo $save;
-}
-
-if ($action == 'generate_pdf') {
-	$save = $admin->generate_pdf();
 	if ($save)
 		echo $save;
 }
