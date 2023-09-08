@@ -945,27 +945,91 @@ class Admin
 		}
 	}
 
-	function generate_pdf()
+	function download_report()
 	{
-		require_once('tcpdf/tcpdf.php');
+		extract($_POST);
+		if (!empty($election_id) && $_GET['action'] == 'download_report') {
 
-		if (isset($_POST['content'])) {
-			// Get the content from the POST request
-			$content = $_POST['content'];
+			$query = $this->db->prepare("SELECT report_path FROM election WHERE id = ?");
+			$query->bind_param('i', $election_id);
+			$exec = $query->execute();
+			$temp = $query->get_result();
+			$show_results = $temp->fetch_assoc();
 
-			// Create a new PDF instance
-			// $pdf = new TCPDF();
+			if ($show_results) {
 
-			// Set PDF title and content
-			$pdf->SetTitle('Results PDF');
-			$pdf->AddPage();
-			$pdf->writeHTML($content);
+				try {
+					$file = '../assets/reports/' . $show_results['report_path'];
+					$filename = $show_results['report_path'];
 
-			// Save the PDF to a folder
-			$pdf->Output('path_to_your_folder/results.pdf', 'F');
+					// Check if the file exists
+					if (file_exists($file)) {
+						// Set headers for file download
+						header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+						header('Content-Disposition: attachment; filename="' . $filename . '"');
+						header('Expires: 0');
+						header('Cache-Control: must-revalidate');
+						header('Pragma: public');
+						header('Content-Length: ' . filesize($file));
+					
+						// Output the file contents
+						readfile($file);
+						echo json_encode(array('status' => 'success', 'message' => 'Excel downloaded successful!'));
+						
+					} else {
+						echo json_encode(array('status' => 'error', 'message' => 'Excel not found!'));
+					}
+				} catch (\Throwable $th) {
+					echo json_encode(array('status' => 'error', 'message' => 'Failed to load excel'));
+				}
+			} else {
+				echo json_encode(array('status' => 'error', 'message' => 'Failed to load data'));
+			}
+		}
+	}
 
-			// Return a response if needed
-			echo 'PDF saved successfully.';
+	function delete_report()
+	{
+		extract($_POST);
+		$updated_by = $_SESSION['login_id'];
+
+		if (!empty($election_id)) {
+			try {
+				$get_report_path = $this->db->prepare("SELECT report_path FROM election WHERE id = ?");
+				if (!$get_report_path) {
+					throw new Exception("Failed to prepare the query.");
+				}
+				$get_report_path->bind_param("i", $election_id);
+
+				if (!$get_report_path->execute()) {
+					throw new Exception("Failed to execute the query.");
+				}
+				$result = $get_report_path->get_result();
+
+				$delete = $this->db->prepare("UPDATE election SET report_path = '', updated_by = ? WHERE id = ?");
+				if (!$delete) {
+					throw new Exception("Failed to prepare the query.");
+				}
+
+				$delete->bind_param("ii", $updated_by, $election_id);
+
+				if (!$delete->execute()) {
+					throw new Exception("Failed to execute the query.");
+				}
+
+				if ($delete->affected_rows > 0 && $result) {
+					$row = $result->fetch_assoc();
+					unlink("../assets/reports/" . $row['report_path']);
+					echo json_encode(array('status' => 'success', 'message' => 'Election report deleted!'));
+				} else {
+					echo json_encode(array('status' => 'error', 'message' => 'Election report not found or already deleted.'));
+				}
+			} catch (Exception $e) {
+				echo json_encode(array('status' => 'error', 'message' => 'Failed to delete report! Try again later.'));
+			}
+		} else {
+			// Invalid or empty report_id
+			echo json_encode(array('status' => 'error', 'message' => 'Invalid report ID.'));
 		}
 	}
 }
