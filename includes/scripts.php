@@ -181,7 +181,6 @@
   });
 </script>
 
-
 <script>
   $(document).ready(function() {
     $(".reset").click(function(e) {
@@ -231,7 +230,7 @@
     $("#add-election-form").find("input, select, textarea").each(function() {
       const input = $(this);
       const value = input.val().trim();
-    const errorMessage = input.data("error-message");
+      const errorMessage = input.data("error-message");
 
       if (value === "") {
         isValid = false;
@@ -331,7 +330,7 @@
     $("#update-election-form").find("input, select, textarea").each(function() {
       const input = $(this);
       const value = input.val().trim();
-    const errorMessage = input.data("error-message");
+      const errorMessage = input.data("error-message");
 
       if (value === "") {
         isValid = false;
@@ -582,6 +581,12 @@
           $('#categoriesTableBody').append(row);
         });
 
+        var btn = '<div>' +
+          '<a href="controllers/export_excel.php?action=export_categories&election_id=' + electionId + '" class="btn btn-primary col-4 offset-4">EXPORT EXCEL</a>' +
+          '</div>';
+
+        // $('.section').append(btn);
+
         // Show the table or hide it
         if (data.length > 0) {
           $('#categoriesTable').show();
@@ -623,7 +628,7 @@
   $('#election').on('change', function() {
     updateAddButtonState();
   });
-
+  0
   // Initial call to update the "Add New" button state on page load
   updateAddButtonState();
 </script>
@@ -1125,6 +1130,134 @@
     } else {
       // User canceled to change status
       toastr.info('User type change canceled.');
+    }
+  });
+</script>
+
+<!-- ELECTION REPORTS -->
+<script>
+  $(document).ready(function() {
+    $(".export_results").click(function(e) {
+      e.preventDefault();
+
+      var electionId = $(this).data("electionId");
+      // var userId = $(this).data("id");
+      // var actionName = $(this).data("name");
+
+      // var confirmReset = confirm("Confirm to Generate Excel");
+
+      // if (confirmReset) {
+      $.ajax({
+        type: 'POST',
+        url: 'controllers/app.php?action=export_results&election_id'.electionId,
+        // data: {
+        //   user_id: userId
+        // },
+        dataType: 'json',
+        beforeSend: function() {
+          showLoadingOverlay();
+        },
+        complete: function() {
+          hideLoadingOverlay();
+        },
+        success: function(response) {
+          if (response.status === "success") {
+            toastr.success(response.message);
+          } else {
+            toastr.error(response.message);
+          }
+        },
+        error: function(err) {
+          console.log(err);
+          toastr.error("An error occurred while processing the request.");
+        }
+      });
+      // }
+    });
+  });
+</script>
+
+<script>
+  $(document).on('click', '.download-report', function(e) {
+    e.preventDefault();
+
+    var reportId = $(this).data('id');
+
+    $.ajax({
+      type: 'POST',
+      url: 'controllers/app.php?action=download_report',
+      data: {
+        election_id: reportId
+      },
+      dataType: 'json',
+      beforeSend: function() {
+        showLoadingOverlay();
+      },
+      success: function(response) {
+        console.log(response);
+        if (response.status === 'success') {
+          toastr.success(response.message);
+          setTimeout(function() {
+            location.reload();
+          }, 1000);
+        } else {
+          hideLoadingOverlay();
+          toastr.error(response.message);
+        }
+      },
+      error: function(xhr, status, error) {
+        // Handle AJAX errors, if any
+        console.error(error);
+        hideLoadingOverlay();
+        toastr.error('An error occurred during the request.');
+      }
+    });
+  });
+</script>
+
+<script>
+  $(document).on('click', '.delete-report', function(e) {
+    e.preventDefault();
+
+    var reportId = $(this).data('id');
+    var reportTitle = $(this).data('name');
+
+    var confirmed = confirm('Are you sure you want to delete ' + reportTitle + ' report ?');
+
+    if (confirmed) {
+      $.ajax({
+        type: 'POST',
+        url: 'controllers/app.php?action=delete_report',
+        data: {
+          election_id: reportId
+        },
+        dataType: 'json',
+        beforeSend: function() {
+          showLoadingOverlay();
+        },
+        success: function(response) {
+          console.log(response);
+          if (response.status === 'success') {
+            // location.href = response.redirect_url;
+            toastr.success(response.message);
+            setTimeout(function() {
+              location.reload();
+            }, 1500);
+          } else {
+            toastr.error(response.message);
+            hideLoadingOverlay();
+          }
+        },
+        error: function(xhr, status, error) {
+          // Handle AJAX errors, if any
+          console.error(error);
+          hideLoadingOverlay();
+          toastr.error('An error occurred during the request.');
+        }
+      });
+    } else {
+      // User canceled the deletion
+      toastr.info('Deletion canceled.');
     }
   });
 </script>
