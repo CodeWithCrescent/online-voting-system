@@ -21,3 +21,33 @@ Key Features:
 7. **Customizable and Scalable:** The system is designed to be customizable and easily scalable to accommodate different voting scenarios and adapt to the evolving needs of the university community.
 
 This project will aspires to foster democratic participation, enhance university governance, and empower the university community in shaping its future through a secure and efficient online voting platform.
+
+## System Summary
+1. ** Admin Section: **
+	i) Add, edit and delete election
+	ii) Add, edit and delete category (positions) of elections
+	iii) Add, edit and delete candidates for each category
+	iv) Activate and deactivate election
+	v) View results of active election
+	vi) View and update profile
+	vii) View, make as admin and reset password of voter
+	viii) Log in to the system securely
+	
+2. ** Voter Section: **
+	i) Log in to the system securely
+	ii) View the list of candidates of active election
+	iii) Cast their votes in the active election
+	iv) View what they have voted for after vote submission
+	v) View live results of active election
+	vi) View and update profile
+	
+## Login Details
+1. ** System administrative: **
+Username: crescent
+Password: 1
+
+2. ** Voter: **
+Register a new account, and by default you will be a voter of a System
+
+NB: This register is just for demonstration only but a real system has to be embbeded in a SIMS which has already have the users, so there is no register for a new account in a real implementation of a system.
+
