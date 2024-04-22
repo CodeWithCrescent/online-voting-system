@@ -1,7 +1,7 @@
-## Online Voting System via Student Information Management System(SIMS)
+## Online Voting System
 
 ## Description:
-This is a PHP-based project aimed at providing an efficient and secure platform for conducting online voting processes within the university community.
+This is a PHP-based project aimed at providing an efficient and secure platform for conducting online voting processes within the small community.
 
 The primary objective of this project is to streamline the voting process, ensuring transparency and accessibility for all eligible voters, including students, faculty, and administrative staff. The system facilitates various types of elections, such as student council elections, faculty representatives, and other university-related voting events.
 
@@ -14,7 +14,7 @@ Key Features:
 
 4. **Real-Time Vote Counting:** The platform offers real-time vote counting and result display, ensuring timely and accurate dissemination of election outcomes.
 
-5. **Integration with SIMS:** Leveraging the existing Student Information Management System of Mbeya University, the project seamlessly integrates voting functionalities, reducing the need for redundant data entry and maintaining a centralized database.
+5. **Can be integrated with SIMS:** Leveraging the existing Student Information Management System of Mbeya University, the project seamlessly integrates voting functionalities, reducing the need for redundant data entry and maintaining a centralized database.
 
 6. **Auditing and Logs:** Comprehensive auditing and logging mechanisms are in place to track all activities during the voting process, enhancing transparency and accountability.
 
